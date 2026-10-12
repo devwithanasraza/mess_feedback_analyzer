@@ -60,9 +60,14 @@ function formatDate(dateStr) {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
-// Fetch helper with error handling
+// Fetch helper with error handling & serverless token attachment
 async function apiFetch(url, options = {}) {
   try {
+    options.headers = options.headers || {};
+    const token = localStorage.getItem('admin_token');
+    if (token && !(options.headers instanceof Headers) && !options.headers['Authorization']) {
+      options.headers['Authorization'] = `Bearer ${token}`;
+    }
     const res = await fetch(url, options);
     const data = await res.json();
     return data;

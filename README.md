@@ -148,6 +148,43 @@ Or place the project directory inside `htdocs` in XAMPP.
 
 ---
 
+## 7.1 Vercel Deployment Guide (100% Tech Stack Preserved)
+
+You can deploy this full PHP + MySQL application directly to Vercel without changing any HTML, CSS, JavaScript, or PHP code.
+
+### How it works on Vercel:
+1. **`vercel.json`:** Configured with `vercel-php@0.7.3` serverless runtime for all endpoints in `/api/*.php`.
+2. **Serverless Session Persistence:** Includes HMAC token authentication with HTTPOnly cookies and bearer token fallback so admin sessions persist across serverless functions.
+3. **Remote MySQL Cloud Database:** The FreeSQLDatabase instance (`sql12.freesqldatabase.com`) is already connected and seeded.
+
+### Deployment Steps:
+1. **Push your code to GitHub:**
+   ```bash
+   git init
+   git add .
+   git commit -m "Mess Menu Feedback Analyzer ready for Vercel"
+   git branch -M main
+   git remote add origin https://github.com/YOUR_USERNAME/Mess-Feedback-Analyzer.git
+   git push -u origin main
+   ```
+2. **Deploy on Vercel:**
+   - Go to [vercel.com](https://vercel.com) and log in.
+   - Click **"Add New"** → **"Project"**.
+   - Import your GitHub repository.
+   - (Optional) In **Environment Variables**, you can set:
+     - `DB_HOST`: `sql12.freesqldatabase.com`
+     - `DB_USER`: `sql12838781`
+     - `DB_PASS`: `66lmY5hzBS`
+     - `DB_NAME`: `sql12838781`
+     - `DB_PORT`: `3306`
+     - `APP_SECRET`: `mess_feedback_analyzer_secret_2026`
+   - Click **"Deploy"**.
+
+3. **Enjoy your live deployment!**
+   - Vercel will serve your static frontend HTML/CSS/JS and run all PHP REST API endpoints automatically.
+
+---
+
 ## 8. Privacy Architecture & Anti-Spam Defense
 
 - **No Identity Retained:** The application never asks for or stores Student Name, Roll Number, Phone Number, Email Address, or IP Address.

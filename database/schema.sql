@@ -4,11 +4,6 @@
 -- Database: mess_feedback_analyzer
 -- ==========================================================
 
-CREATE DATABASE IF NOT EXISTS `mess_feedback_analyzer`
-CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-USE `mess_feedback_analyzer`;
-
 -- 1. Admins Table
 CREATE TABLE IF NOT EXISTS `admins` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,

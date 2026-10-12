@@ -14,35 +14,36 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Database Credentials
-define('DB_HOST', 'sql12.freesqldatabase.com');
-define('DB_USER', 'sql12838781');
-define('DB_PASS', '66lmY5hzBS');
-define('DB_NAME', 'sql12838781');
+// Database Credentials with Environment Variable support (for Vercel & Cloud DBs)
+define('DB_HOST', getenv('DB_HOST') ?: 'sql12.freesqldatabase.com');
+define('DB_USER', getenv('DB_USER') ?: 'sql12838781');
+define('DB_PASS', getenv('DB_PASS') ?: '66lmY5hzBS');
+define('DB_NAME', getenv('DB_NAME') ?: 'sql12838781');
+define('DB_PORT', getenv('DB_PORT') ?: '3306');
 define('DB_CHARSET', 'utf8mb4');
 
 /**
  * Returns a singleton PDO database connection.
  * Uses prepared statements and exception handling.
  */
-function getDbConnection(): PDO
-{
+function getDbConnection(): PDO {
     static $pdo = null;
     if ($pdo === null) {
-        $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
+        $port = DB_PORT;
+        $dsn = "mysql:host=" . DB_HOST . ";port=" . $port . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
         $options = [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false,
+            PDO::ATTR_EMULATE_PREPARES   => false,
+            PDO::ATTR_TIMEOUT            => 15,
         ];
         try {
             $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
         } catch (PDOException $e) {
-            // Friendly error message without leaking sensitive server credentials
             http_response_code(500);
             echo json_encode([
                 'success' => false,
-                'error' => 'Database connection failed. Please ensure MySQL is running and seed.php has been executed.',
+                'error'   => 'Database connection failed. Please ensure MySQL is accessible.',
                 'details' => $e->getMessage()
             ]);
             exit;
@@ -52,10 +53,57 @@ function getDbConnection(): PDO
 }
 
 /**
+ * Serverless JWT/HMAC token generator for Admin sessions
+ */
+function generateAdminToken(array $admin): string {
+    $payload = [
+        'id'       => $admin['id'],
+        'username' => $admin['username'],
+        'name'     => $admin['full_name'],
+        'role'     => $admin['role'],
+        'exp'      => time() + (86400 * 7)
+    ];
+    $json = base64_encode(json_encode($payload));
+    $secret = getenv('APP_SECRET') ?: 'mess_feedback_analyzer_secret_2026';
+    $sig = hash_hmac('sha256', $json, $secret);
+    return $json . '.' . $sig;
+}
+
+/**
+ * Serverless token verification
+ */
+function verifyAdminToken(?string $token): ?array {
+    if (empty($token) || !str_contains($token, '.')) {
+        return null;
+    }
+    [$json, $sig] = explode('.', $token, 2);
+    $secret = getenv('APP_SECRET') ?: 'mess_feedback_analyzer_secret_2026';
+    if (!hash_equals(hash_hmac('sha256', $json, $secret), $sig)) {
+        return null;
+    }
+    $payload = json_decode(base64_decode($json), true);
+    if (!$payload || !isset($payload['exp']) || $payload['exp'] < time()) {
+        return null;
+    }
+    return $payload;
+}
+
+/**
+ * Extract bearer or cookie token
+ */
+function getRequestAdminToken(): ?string {
+    $headers = function_exists('getallheaders') ? getallheaders() : [];
+    $auth = $headers['Authorization'] ?? $headers['authorization'] ?? $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+    if (preg_match('/Bearer\s+(.*)$/i', $auth, $matches)) {
+        return trim($matches[1]);
+    }
+    return $_COOKIE['admin_auth_token'] ?? null;
+}
+
+/**
  * Output JSON response with appropriate headers
  */
-function jsonResponse(array $data, int $statusCode = 200): void
-{
+function jsonResponse(array $data, int $statusCode = 200): void {
     http_response_code($statusCode);
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
@@ -65,19 +113,17 @@ function jsonResponse(array $data, int $statusCode = 200): void
 /**
  * Output JSON error response
  */
-function jsonError(string $message, int $statusCode = 400, array $extra = []): void
-{
+function jsonError(string $message, int $statusCode = 400, array $extra = []): void {
     jsonResponse(array_merge([
         'success' => false,
-        'error' => $message
+        'error'   => $message
     ], $extra), $statusCode);
 }
 
 /**
  * Sanitize text input to prevent XSS
  */
-function sanitizeInput(?string $data): string
-{
+function sanitizeInput(?string $data): string {
     if ($data === null) {
         return '';
     }
@@ -92,52 +138,17 @@ function sanitizeInput(?string $data): string
  * Polarity Score = (Positive Matches - Negative Matches) / (Total Matches + 1)
  * Normalized to [-1.0, 1.0] range
  */
-function classifyFeedbackSentiment(string $text): array
-{
+function classifyFeedbackSentiment(string $text): array {
     $positiveKeywords = [
-        'good',
-        'great',
-        'tasty',
-        'fresh',
-        'excellent',
-        'delicious',
-        'nice',
-        'amazing',
-        'superb',
-        'crispy',
-        'soft',
-        'flavorful',
-        'satisfying',
-        'perfect',
-        'clean',
-        'hygienic',
-        'love',
-        'best',
-        'well'
+        'good', 'great', 'tasty', 'fresh', 'excellent', 'delicious',
+        'nice', 'amazing', 'superb', 'crispy', 'soft', 'flavorful',
+        'satisfying', 'perfect', 'clean', 'hygienic', 'love', 'best', 'well'
     ];
 
     $negativeKeywords = [
-        'bad',
-        'poor',
-        'cold',
-        'oily',
-        'salty',
-        'bland',
-        'tasteless',
-        'dirty',
-        'unhealthy',
-        'waste',
-        'sour',
-        'hard',
-        'stale',
-        'smelly',
-        'delayed',
-        'watery',
-        'undercooked',
-        'burnt',
-        'insects',
-        'hair',
-        'horrible'
+        'bad', 'poor', 'cold', 'oily', 'salty', 'bland', 'tasteless',
+        'dirty', 'unhealthy', 'waste', 'sour', 'hard', 'stale', 'smelly',
+        'delayed', 'watery', 'undercooked', 'burnt', 'insects', 'hair', 'horrible'
     ];
 
     $cleanText = strtolower($text);
@@ -174,8 +185,8 @@ function classifyFeedbackSentiment(string $text): array
     $allMatched = array_merge($matchedPositive, $matchedNegative);
 
     return [
-        'sentiment' => $sentiment,
-        'sentiment_score' => $score,
+        'sentiment'        => $sentiment,
+        'sentiment_score'  => $score,
         'positive_matches' => $matchedPositive,
         'negative_matches' => $matchedNegative,
         'matched_keywords' => !empty($allMatched) ? implode(', ', $allMatched) : 'None'
@@ -202,12 +213,12 @@ function calculateWeightedSatisfaction(
     float $quantity
 ): float {
     $weightedSum = (
-        ($overall * 0.40) +
-        ($taste * 0.20) +
-        ($quality * 0.15) +
-        ($hygiene * 0.10) +
+        ($overall   * 0.40) +
+        ($taste     * 0.20) +
+        ($quality   * 0.15) +
+        ($hygiene   * 0.10) +
         ($freshness * 0.10) +
-        ($quantity * 0.05)
+        ($quantity  * 0.05)
     );
 
     // Normalize out of 5 stars into percentage 0 - 100%
@@ -218,8 +229,7 @@ function calculateWeightedSatisfaction(
 /**
  * Verify CSRF Token for security
  */
-function verifyCsrfToken(?string $token): bool
-{
+function verifyCsrfToken(?string $token): bool {
     if (empty($_SESSION['csrf_token']) || empty($token)) {
         return false;
     }
@@ -229,8 +239,7 @@ function verifyCsrfToken(?string $token): bool
 /**
  * Get or initialize CSRF Token
  */
-function getCsrfToken(): string
-{
+function getCsrfToken(): string {
     if (empty($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     }

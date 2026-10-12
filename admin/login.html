@@ -78,6 +78,9 @@
         });
 
         if (res.success) {
+          if (res.token) {
+            localStorage.setItem('admin_token', res.token);
+          }
           showToast('Login successful! Redirecting to dashboard...', 'success');
           setTimeout(() => {
             window.location.href = 'dashboard.html';

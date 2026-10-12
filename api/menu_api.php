@@ -13,11 +13,19 @@ header('Content-Type: application/json; charset=utf-8');
 $pdo = getDbConnection();
 $method = $_SERVER['REQUEST_METHOD'];
 
-// Helper to check admin authentication for mutation actions
+// Helper to check admin authentication for mutation actions (session or serverless token)
 function requireAdminAuth(): void {
-    if (empty($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-        jsonError('Unauthorized. Admin session required.', 401);
+    if (!empty($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
+        return;
     }
+    $tokenData = verifyAdminToken(getRequestAdminToken());
+    if ($tokenData) {
+        $_SESSION['admin_logged_in'] = true;
+        $_SESSION['admin_id'] = $tokenData['id'];
+        $_SESSION['admin_username'] = $tokenData['username'];
+        return;
+    }
+    jsonError('Unauthorized. Admin session required.', 401);
 }
 
 // 1. GET: Fetch Menus for admin view

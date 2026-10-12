@@ -43,9 +43,21 @@ if ($action === 'login') {
     $upd = $pdo->prepare("UPDATE admins SET last_login = NOW() WHERE id = ?");
     $upd->execute([$admin['id']]);
 
+    // Generate serverless token for Vercel persistence
+    $authToken = generateAdminToken($admin);
+
+    // Set 7-day auth cookie
+    setcookie('admin_auth_token', $authToken, [
+        'expires'  => time() + (86400 * 7),
+        'path'     => '/',
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
+
     jsonResponse([
         'success'    => true,
         'message'    => 'Login successful. Welcome back!',
+        'token'      => $authToken,
         'csrf_token' => getCsrfToken(),
         'user'       => [
             'id'       => $admin['id'],
@@ -57,16 +69,32 @@ if ($action === 'login') {
 }
 
 if ($action === 'check') {
+    // Check session first, then fallback to token verification for serverless
+    $userPayload = null;
     if (!empty($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
+        $userPayload = [
+            'id'       => $_SESSION['admin_id'],
+            'username' => $_SESSION['admin_username'],
+            'name'     => $_SESSION['admin_name'],
+            'role'     => $_SESSION['admin_role']
+        ];
+    } else {
+        $tokenData = verifyAdminToken(getRequestAdminToken());
+        if ($tokenData) {
+            $_SESSION['admin_logged_in'] = true;
+            $_SESSION['admin_id']        = $tokenData['id'];
+            $_SESSION['admin_username']  = $tokenData['username'];
+            $_SESSION['admin_name']      = $tokenData['name'];
+            $_SESSION['admin_role']      = $tokenData['role'];
+            $userPayload = $tokenData;
+        }
+    }
+
+    if ($userPayload) {
         jsonResponse([
             'authenticated' => true,
             'csrf_token'    => getCsrfToken(),
-            'user'          => [
-                'id'       => $_SESSION['admin_id'],
-                'username' => $_SESSION['admin_username'],
-                'name'     => $_SESSION['admin_name'],
-                'role'     => $_SESSION['admin_role']
-            ]
+            'user'          => $userPayload
         ]);
     } else {
         jsonResponse([
@@ -78,6 +106,12 @@ if ($action === 'check') {
 
 if ($action === 'logout') {
     $_SESSION = [];
+    setcookie('admin_auth_token', '', [
+        'expires'  => time() - 3600,
+        'path'     => '/',
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
     if (ini_get("session.use_cookies")) {
         $params = session_get_cookie_params();
         setcookie(

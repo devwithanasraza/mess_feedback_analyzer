@@ -48,6 +48,7 @@ async function handleAdminLogout(e) {
   if (e) e.preventDefault();
   if (confirm('Are you sure you want to sign out of the Admin Portal?')) {
     const res = await apiFetch('../api/auth.php?action=logout');
+    localStorage.removeItem('admin_token');
     if (res.success) {
       window.location.href = 'login.html';
     } else {

@@ -7,23 +7,24 @@
 
 declare(strict_types=1);
 
-$dbHost = 'localhost';
-$dbUser = 'root';
-$dbPass = '';
-$dbName = 'mess_feedback_analyzer';
+$dbHost = getenv('DB_HOST') ?: 'sql12.freesqldatabase.com';
+$dbUser = getenv('DB_USER') ?: 'sql12838781';
+$dbPass = getenv('DB_PASS') ?: '66lmY5hzBS';
+$dbName = getenv('DB_NAME') ?: 'sql12838781';
+$dbPort = getenv('DB_PORT') ?: '3306';
 
 echo "=== MESS MENU FEEDBACK ANALYZER SEEDER ===\n";
+echo "Target Host: {$dbHost} | Database: {$dbName}\n";
 
 try {
-    // 1. Initial connection without DB to create database
-    $pdo = new PDO("mysql:host={$dbHost};charset=utf8mb4", $dbUser, $dbPass, [
+    // 1. Connection directly to target database
+    $pdo = new PDO("mysql:host={$dbHost};port={$dbPort};dbname={$dbName};charset=utf8mb4", $dbUser, $dbPass, [
+        PDO::ATTR_TIMEOUT => 20,
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
 
-    echo "[1/5] Creating database '{$dbName}' if not exists...\n";
-    $pdo->exec("CREATE DATABASE IF NOT EXISTS `{$dbName}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-    $pdo->exec("USE `{$dbName}`;");
+    echo "[1/4] Connected to database '{$dbName}' successfully.\n";
 
     // 2. Run schema file
     echo "[2/5] Applying schema from database/schema.sql...\n";
