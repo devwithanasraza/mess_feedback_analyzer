@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu Management | Mess Menu Feedback Analyzer</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+</head>
+<body class="admin-body">
+
+  <!-- Admin Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand-icon">🍽</div>
+      <div class="sidebar-brand-text">
+        <span class="sidebar-brand-title">Mess Analyzer</span>
+        <span class="sidebar-brand-badge">Admin Operations</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">Analytics & Operations</div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item">
+          <a href="dashboard.html" class="sidebar-link">
+            <span>📊</span> Dashboard
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="menu.html" class="sidebar-link active">
+            <span>📋</span> Menu Management
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="feedback.html" class="sidebar-link">
+            <span>💬</span> Feedback Records
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="analytics.html" class="sidebar-link">
+            <span>📈</span> Food Quality Analytics
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="wastage.html" class="sidebar-link">
+            <span>♻️</span> Wastage Analytics
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="reports.html" class="sidebar-link">
+            <span>📄</span> Reports & CSV Export
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="admin-user-info">
+        <div class="admin-avatar">AD</div>
+        <div>
+          <div class="admin-details-name admin-display-name">Mess Admin</div>
+          <div class="admin-details-role">Operations Lead</div>
+        </div>
+      </div>
+      <button type="button" id="admin-logout-btn" class="logout-btn" title="Sign Out">🚪</button>
+    </div>
+  </aside>
+
+  <!-- Main Content Wrapper -->
+  <div class="admin-main">
+    
+    <!-- Top Bar -->
+    <header class="admin-topbar">
+      <div class="admin-topbar-left">
+        <button type="button" class="sidebar-toggle-btn" aria-label="Toggle navigation drawer">☰</button>
+        <div>
+          <div class="page-breadcrumb">Operations / Schedules</div>
+          <h1 class="page-title-heading">Menu Management</h1>
+        </div>
+      </div>
+
+      <div class="admin-topbar-right">
+        <button type="button" class="btn btn-primary btn-sm" onclick="openModal('modal-create-menu')">
+          + Create New Meal Menu
+        </button>
+      </div>
+    </header>
+
+    <div class="admin-content-area">
+      
+      <!-- Date Picker Toolbar -->
+      <div style="background:#FFFFFF; border:1px solid var(--color-border); border-radius:var(--radius-lg); padding:1.25rem 1.5rem; margin-bottom:2rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <label for="admin-menu-date" style="font-size:0.85rem; font-weight:700; color:var(--color-text-muted); display:block; margin-bottom:0.25rem;">
+            Select Schedule Date:
+          </label>
+          <div style="display:flex; align-items:center; gap:0.5rem;">
+            <input type="date" id="admin-menu-date" class="form-control" style="width:auto; padding:0.45rem 0.85rem;">
+            <button type="button" class="btn btn-sm btn-outline" id="btn-quick-today">Today</button>
+            <button type="button" class="btn btn-sm btn-outline" id="btn-quick-tomorrow">Tomorrow</button>
+          </div>
+        </div>
+
+        <div style="font-size:0.88rem; color:var(--color-text-muted);">
+          Active menu items are visible immediately on the public student portal.
+        </div>
+      </div>
+
+      <!-- Meal Cards Grid -->
+      <div id="admin-menus-grid" style="display:flex; flex-direction:column; gap:2rem;">
+        <!-- Loaded by JavaScript from /api/menu_api.php -->
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL 1: Create New Menu -->
+  <div class="modal-overlay" id="modal-create-menu">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Create Daily Meal Menu</h3>
+        <button type="button" class="modal-close-btn" onclick="closeModal('modal-create-menu')">✕</button>
+      </div>
+      <form id="form-create-menu">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Menu Date</label>
+            <input type="date" id="new-menu-date" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Meal Session</label>
+            <select id="new-meal-type" class="form-control" required>
+              <option value="Breakfast">Breakfast</option>
+              <option value="Lunch">Lunch</option>
+              <option value="Snacks">Snacks</option>
+              <option value="Dinner">Dinner</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Serving Schedule (Time)</label>
+            <input type="text" id="new-serving-time" class="form-control" placeholder="E.g., 12:30 PM - 02:30 PM" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('modal-create-menu')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Menu</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Add Dish to Menu -->
+  <div class="modal-overlay" id="modal-add-dish">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Add Dish to Menu</h3>
+        <button type="button" class="modal-close-btn" onclick="closeModal('modal-add-dish')">✕</button>
+      </div>
+      <form id="form-add-dish">
+        <input type="hidden" id="add-dish-menu-id">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Dish Name</label>
+            <input type="text" id="dish-name" class="form-control" placeholder="E.g., Dal Tadka" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select id="dish-category" class="form-control" required>
+              <option value="Main Course">Main Course</option>
+              <option value="Dal/Curry">Dal / Curry</option>
+              <option value="Bread/Rice">Bread / Rice</option>
+              <option value="Snack">Snack</option>
+              <option value="Dessert">Dessert</option>
+              <option value="Beverage">Beverage</option>
+              <option value="Salad/Side">Salad / Side</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Dietary Classification</label>
+            <select id="dish-is-veg" class="form-control">
+              <option value="1">Pure Vegetarian (Veg)</option>
+              <option value="0">Non-Vegetarian (Non-Veg)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Short Description</label>
+            <input type="text" id="dish-description" class="form-control" placeholder="E.g., Toor dal tempered with garlic and cumin">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('modal-add-dish')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Dish</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const dateInput = document.getElementById('admin-menu-date');
+      dateInput.value = new Date().toISOString().split('T')[0];
+
+      loadAdminMenus(dateInput.value);
+
+      dateInput.addEventListener('change', () => loadAdminMenus(dateInput.value));
+
+      document.getElementById('btn-quick-today').addEventListener('click', () => {
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.value = today;
+        loadAdminMenus(today);
+      });
+
+      document.getElementById('btn-quick-tomorrow').addEventListener('click', () => {
+        const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+        dateInput.value = tomorrow;
+        loadAdminMenus(tomorrow);
+      });
+
+      // Handle create menu form
+      document.getElementById('form-create-menu').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const payload = {
+          action: 'create_menu',
+          menu_date: document.getElementById('new-menu-date').value,
+          meal_type: document.getElementById('new-meal-type').value,
+          serving_time: document.getElementById('new-serving-time').value
+        };
+
+        const res = await apiFetch('../api/menu_api.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.success) {
+          showToast(res.message, 'success');
+          closeModal('modal-create-menu');
+          dateInput.value = payload.menu_date;
+          loadAdminMenus(payload.menu_date);
+        } else {
+          showToast(res.error || 'Failed to create menu.', 'error');
+        }
+      });
+
+      // Handle add dish form
+      document.getElementById('form-add-dish').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const payload = {
+          action: 'add_item',
+          menu_id: parseInt(document.getElementById('add-dish-menu-id').value, 10),
+          item_name: document.getElementById('dish-name').value,
+          category: document.getElementById('dish-category').value,
+          is_veg: parseInt(document.getElementById('dish-is-veg').value, 10),
+          description: document.getElementById('dish-description').value
+        };
+
+        const res = await apiFetch('../api/menu_api.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.success) {
+          showToast(res.message, 'success');
+          closeModal('modal-add-dish');
+          loadAdminMenus(dateInput.value);
+        } else {
+          showToast(res.error || 'Failed to add dish.', 'error');
+        }
+      });
+    });
+
+    async function loadAdminMenus(dateStr) {
+      const container = document.getElementById('admin-menus-grid');
+      container.innerHTML = '<div class="skeleton" style="height: 180px;"></div>';
+
+      const res = await apiFetch(`../api/menu_api.php?date=${dateStr}`);
+      if (!res.success || !res.menus || res.menus.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h3 class="empty-title">No Menus Scheduled for ${formatDate(dateStr)}</h3>
+            <p class="empty-desc">Click '+ Create New Meal Menu' in the top bar to set up breakfast, lunch, snacks, or dinner for this date.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+      res.menus.forEach(menu => {
+        html += `
+          <div class="table-card">
+            <div class="table-toolbar" style="background:#FAFBF9;">
+              <div style="display:flex; align-items:center; gap:0.85rem;">
+                <span class="badge ${menu.status === 'Active' ? 'badge-success' : 'badge-neutral'}">${menu.status}</span>
+                <h3 style="font-size:1.25rem; font-weight:800; color:var(--color-primary-dark);">${escapeHtml(menu.meal_type)}</h3>
+                <span style="font-size:0.85rem; color:var(--color-text-muted);">🕒 ${escapeHtml(menu.serving_time)}</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:0.5rem;">
+                <button type="button" class="btn btn-sm btn-outline" onclick="openAddDishModal(${menu.id})">
+                  + Add Dish
+                </button>
+                <button type="button" class="btn btn-sm btn-outline" onclick="deleteMenu(${menu.id}, '${menu.meal_type}')" style="color:var(--color-danger); border-color:#FECACA;">
+                  Delete
+                </button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Dish Name</th>
+                    <th>Category</th>
+                    <th>Dietary</th>
+                    <th>Description</th>
+                    <th style="text-align:right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+        `;
+
+        if (!menu.items || menu.items.length === 0) {
+          html += `<tr><td colspan="5" style="text-align:center; color:var(--color-text-muted); padding:1.5rem;">No dishes added yet. Click '+ Add Dish' to add items.</td></tr>`;
+        } else {
+          menu.items.forEach(item => {
+            html += `
+              <tr>
+                <td><strong>${escapeHtml(item.item_name)}</strong></td>
+                <td><span class="badge badge-neutral">${escapeHtml(item.category)}</span></td>
+                <td>
+                  <span class="badge ${item.is_veg == 1 ? 'badge-veg' : 'badge-nonveg'}">
+                    ${item.is_veg == 1 ? '● Veg' : '▲ Non-Veg'}
+                  </span>
+                </td>
+                <td style="color:var(--color-text-muted); font-size:0.82rem;">${escapeHtml(item.description || '-')}</td>
+                <td style="text-align:right;">
+                  <button type="button" class="btn btn-sm btn-outline" onclick="deleteDish(${item.id}, '${escapeHtml(item.item_name)}')" style="padding:0.25rem 0.6rem; font-size:0.75rem; color:var(--color-danger);">
+                    Remove
+                  </button>
+                </td>
+              </tr>
+            `;
+          });
+        }
+
+        html += `
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function openAddDishModal(menuId) {
+      document.getElementById('add-dish-menu-id').value = menuId;
+      document.getElementById('dish-name').value = '';
+      document.getElementById('dish-description').value = '';
+      openModal('modal-add-dish');
+    }
+
+    async function deleteDish(itemId, dishName) {
+      if (confirm(`Are you sure you want to remove '${dishName}' from this meal?`)) {
+        const res = await apiFetch('../api/menu_api.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'delete_item', item_id: itemId })
+        });
+        if (res.success) {
+          showToast('Dish removed.', 'success');
+          loadAdminMenus(document.getElementById('admin-menu-date').value);
+        } else {
+          showToast(res.error || 'Failed to delete dish.', 'error');
+        }
+      }
+    }
+
+    async function deleteMenu(menuId, mealType) {
+      if (confirm(`Are you sure you want to delete the entire ${mealType} menu? This will remove all listed dishes.`)) {
+        const res = await apiFetch('../api/menu_api.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'delete_menu', menu_id: menuId })
+        });
+        if (res.success) {
+          showToast('Menu deleted.', 'success');
+          loadAdminMenus(document.getElementById('admin-menu-date').value);
+        } else {
+          showToast(res.error || 'Failed to delete menu.', 'error');
+        }
+      }
+    }
+  </script>
+</body>
+</html>

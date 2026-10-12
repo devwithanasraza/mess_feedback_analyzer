@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal Login | Mess Menu Feedback Analyzer</title>
+  <meta name="description" content="Secure administrative sign in for mess supervisors, head chefs, and college dining committees.">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+</head>
+<body style="background-color: #F4F6F4; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem;">
+
+  <div style="max-width: 440px; width: 100%; background: #FFFFFF; border: 1px solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); overflow: hidden;">
+    
+    <div style="background-color: var(--color-primary-dark); padding: 2rem 2rem 1.75rem; text-align: center; color: #FFFFFF;">
+      <div style="width: 48px; height: 48px; background-color: var(--color-accent); color: var(--color-primary-dark); border-radius: var(--radius-md); display: inline-flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 0.85rem;">
+        🍽
+      </div>
+      <h1 style="font-size: 1.35rem; font-weight: 800; letter-spacing: -0.01em;">Mess Admin Portal</h1>
+      <p style="font-size: 0.82rem; color: rgba(255,255,255,0.75); margin-top: 0.25rem;">
+        Dining Committee Operations & Analytics Access
+      </p>
+    </div>
+
+    <!-- Demo Credentials Notice -->
+    <div style="background-color: #FEF9C3; border-bottom: 1px solid #FDE047; padding: 0.85rem 1.5rem; font-size: 0.82rem; color: #854D0E;">
+      <strong>Demo Credentials:</strong> Username: <code>admin</code> | Password: <code>admin123</code>
+    </div>
+
+    <form id="admin-login-form" style="padding: 2rem 1.75rem;">
+      <div class="form-group">
+        <label for="username" class="form-label">Admin Username</label>
+        <input type="text" id="username" class="form-control" placeholder="admin" required autofocus autocomplete="username">
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" id="password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+      </div>
+
+      <button type="submit" id="btn-login" class="btn btn-primary btn-block btn-lg" style="margin-top: 1rem;">
+        Sign In to Admin Portal
+      </button>
+
+      <div style="margin-top: 1.5rem; text-align: center;">
+        <a href="../index.html" style="font-size: 0.85rem; color: var(--color-text-muted);">
+          ← Return to Student Public Portal
+        </a>
+      </div>
+    </form>
+
+  </div>
+
+  <script src="../assets/js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('admin-login-form');
+      const submitBtn = document.getElementById('btn-login');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        if (!username || !password) {
+          showToast('Please enter both username and password.', 'error');
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Verifying credentials...';
+
+        const res = await apiFetch('../api/auth.php?action=login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        if (res.success) {
+          showToast('Login successful! Redirecting to dashboard...', 'success');
+          setTimeout(() => {
+            window.location.href = 'dashboard.html';
+          }, 600);
+        } else {
+          showToast(res.error || 'Invalid credentials.', 'error');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Sign In to Admin Portal';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

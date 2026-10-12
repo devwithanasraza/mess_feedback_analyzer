@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback Recorded | Mess Menu Feedback Analyzer</title>
+  <meta name="description" content="Your anonymous mess feedback has been securely registered in the academic analytics database.">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+  <!-- Site Navigation Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">🍽</div>
+        <div class="brand-text">
+          <span class="brand-title">Mess Feedback Analyzer</span>
+          <span class="brand-tag">Campus Dining Intelligence</span>
+        </div>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="menu.html" class="nav-link">Today's Menu</a></li>
+        <li><a href="feedback.html" class="nav-link">Give Feedback</a></li>
+        <li><a href="about.html" class="nav-link">How It Works & DS</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="admin/login.html" class="btn btn-outline btn-sm">Admin Portal</a>
+      </div>
+    </div>
+  </header>
+
+  <main style="padding: 4.5rem 0 6rem;">
+    <div class="container" style="max-width: 680px; text-align: center;">
+      
+      <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 3rem 2.5rem; box-shadow: var(--shadow-md);">
+        
+        <div style="width: 72px; height: 72px; background-color: #E8F5E9; color: #2E7D32; border-radius: var(--radius-pill); display: inline-flex; align-items: center; justify-content: center; font-size: 2.25rem; margin-bottom: 1.5rem;">
+          ✓
+        </div>
+
+        <h1 style="font-size: 2rem; font-weight: 800; color: var(--color-primary-dark); margin-bottom: 0.75rem;">
+          Feedback Recorded Anonymously!
+        </h1>
+
+        <p style="color: var(--color-text-muted); font-size: 1.05rem; line-height: 1.6; margin-bottom: 2rem;">
+          Thank you for contributing to better food quality and lower plate wastage. Your submission has been securely ingested into the college data analytics engine.
+        </p>
+
+        <!-- Dynamic Feedback Summary Badge -->
+        <div style="background-color: var(--color-bg); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 2rem; text-align: left;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; font-size:0.88rem;">
+            <span style="color:var(--color-text-muted);">Meal Session:</span>
+            <strong id="summary-meal">Lunch</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; font-size:0.88rem;">
+            <span style="color:var(--color-text-muted);">Privacy Status:</span>
+            <span class="badge badge-success">100% Anonymous (No Identity Retained)</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:0.88rem;">
+            <span style="color:var(--color-text-muted);">Sentiment Classification:</span>
+            <strong id="summary-sentiment" style="color:var(--color-primary);">Positive</strong>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+          <a href="menu.html" class="btn btn-primary">View Today's Menu</a>
+          <a href="index.html" class="btn btn-outline">Return to Home</a>
+          <a href="about.html" class="btn btn-outline">How the System Works</a>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>© 2026 Mess Menu Feedback Analyzer. Academic Project for B.Tech Data Science.</div>
+        <div>Built with PHP 8, MySQL 8, Vanilla JS & Chart.js</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const meal = urlParams.get('meal');
+      const sentiment = urlParams.get('sentiment');
+
+      if (meal) {
+        document.getElementById('summary-meal').textContent = meal;
+      }
+      if (sentiment) {
+        const sentEl = document.getElementById('summary-sentiment');
+        sentEl.textContent = sentiment;
+        if (sentiment === 'Positive') sentEl.style.color = '#2E7D5B';
+        else if (sentiment === 'Negative') sentEl.style.color = '#DC2626';
+        else sentEl.style.color = '#64748B';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Anonymous Feedback | Mess Menu Feedback Analyzer</title>
+  <meta name="description" content="Submit 100% anonymous dining feedback to help your college mess improve food quality, hygiene, and reduce plate waste.">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+  <!-- Site Navigation Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">🍽</div>
+        <div class="brand-text">
+          <span class="brand-title">Mess Feedback Analyzer</span>
+          <span class="brand-tag">Campus Dining Intelligence</span>
+        </div>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="menu.html" class="nav-link">Today's Menu</a></li>
+        <li><a href="feedback.html" class="nav-link active">Give Feedback</a></li>
+        <li><a href="about.html" class="nav-link">How It Works & DS</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="admin/login.html" class="btn btn-outline btn-sm">Admin Portal</a>
+        <button class="mobile-menu-btn" aria-label="Toggle navigation">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main style="padding: 2rem 0 5rem;">
+    <div class="container">
+      
+      <div class="feedback-wrapper">
+        <!-- Top Banner -->
+        <div class="feedback-banner">
+          <h1>Student Dining Feedback</h1>
+          <p>Your honest ratings directly influence tomorrow's menu preparation and hygiene standards.</p>
+        </div>
+
+        <!-- Privacy Callout -->
+        <div class="privacy-callout">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <div class="privacy-callout-text">
+            <h4>100% Anonymous Feedback</h4>
+            <p>We do not collect or store your Name, Roll Number, Phone Number, Email, or Student ID. Mess management only views aggregated analytical data.</p>
+          </div>
+        </div>
+
+        <!-- Multi-Step Progress Indicator (1 ━━━ 2 ━━━ 3 ━━━ 4 ━━━ 5) -->
+        <div class="stepper-progress">
+          <div class="step-indicator active" data-step="1">
+            <div class="step-circle">1</div>
+            <span class="step-label">Select Meal</span>
+          </div>
+
+          <div class="step-indicator" data-step="2">
+            <div class="step-circle">2</div>
+            <span class="step-label">Rate Food</span>
+          </div>
+
+          <div class="step-indicator" data-step="3">
+            <div class="step-circle">3</div>
+            <span class="step-label">Experience</span>
+          </div>
+
+          <div class="step-indicator" data-step="4">
+            <div class="step-circle">4</div>
+            <span class="step-label">Food Wastage</span>
+          </div>
+
+          <div class="step-indicator" data-step="5">
+            <div class="step-circle">5</div>
+            <span class="step-label">Submit</span>
+          </div>
+        </div>
+
+        <!-- Main Form -->
+        <form id="feedback-form" novalidate>
+          
+          <!-- Anti-Spam Honeypots (Invisible to Real Users) -->
+          <input type="text" name="website_hp" id="website_hp" class="hp-field" tabindex="-1" autocomplete="off">
+          <input type="email" name="student_email_hp" id="student_email_hp" class="hp-field" tabindex="-1" autocomplete="off">
+
+          <!-- ===================================================================
+               STEP 1: SELECT MEAL & DATE
+               =================================================================== -->
+          <div class="form-step active" id="step-1">
+            <div class="step-header">
+              <h2>Step 1: Which meal are you reviewing?</h2>
+              <p>Select the meal session and date you experienced in the dining hall.</p>
+            </div>
+
+            <div class="form-group" style="max-width: 300px;">
+              <label for="feedback-date" class="form-label">Meal Date <span class="required">*</span></label>
+              <input type="date" id="feedback-date" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Meal Session <span class="required">*</span></label>
+              <div id="meal-cards-container" style="display:flex; gap:1rem; flex-wrap:wrap;">
+                <!-- Loaded dynamically by feedback.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- ===================================================================
+               STEP 2: RATE INDIVIDUAL MENU ITEMS
+               =================================================================== -->
+          <div class="form-step" id="step-2">
+            <div class="step-header">
+              <h2>Step 2: Rate Today's Dishes</h2>
+              <p>
+                Selected Meal: <strong id="selected-meal-display" style="color:var(--color-primary);">Lunch</strong>.
+                Rate each dish across taste, quality, freshness, and portion.
+              </p>
+            </div>
+
+            <!-- Dynamic dish rating cards loaded here -->
+            <div id="dishes-rating-container">
+              <!-- Rendered by feedback.js -->
+            </div>
+          </div>
+
+          <!-- ===================================================================
+               STEP 3: OVERALL MEAL, HYGIENE, TEMPERATURE & PORTION
+               =================================================================== -->
+          <div class="form-step" id="step-3">
+            <div class="step-header">
+              <h2>Step 3: Overall Dining Experience</h2>
+              <p>Help us evaluate ambient dining parameters like serving temperature and hall hygiene.</p>
+            </div>
+
+            <!-- Overall Rating -->
+            <div class="form-group">
+              <label class="form-label">Overall Meal Rating <span class="required">*</span></label>
+              <div class="rating-block" data-field="overall_rating" style="display:flex; align-items:center; gap:1rem;">
+                <div class="star-rating-control">
+                  <button type="button" class="star-btn" data-val="1">★</button>
+                  <button type="button" class="star-btn" data-val="2">★</button>
+                  <button type="button" class="star-btn" data-val="3">★</button>
+                  <button type="button" class="star-btn" data-val="4">★</button>
+                  <button type="button" class="star-btn" data-val="5">★</button>
+                </div>
+                <span class="rating-val-text" style="font-weight:700; color:var(--color-primary);">Tap stars to rate</span>
+              </div>
+            </div>
+
+            <!-- Hygiene Rating -->
+            <div class="form-group">
+              <label class="form-label">Mess Dining Hall & Counter Hygiene <span class="required">*</span></label>
+              <div class="rating-block" data-field="hygiene_rating" style="display:flex; align-items:center; gap:1rem;">
+                <div class="star-rating-control">
+                  <button type="button" class="star-btn" data-val="1">★</button>
+                  <button type="button" class="star-btn" data-val="2">★</button>
+                  <button type="button" class="star-btn" data-val="3">★</button>
+                  <button type="button" class="star-btn" data-val="4">★</button>
+                  <button type="button" class="star-btn" data-val="5">★</button>
+                </div>
+                <span class="rating-val-text" style="font-weight:700; color:var(--color-primary);">Tap stars to rate</span>
+              </div>
+            </div>
+
+            <!-- Temperature -->
+            <div class="form-group">
+              <label class="form-label">Food Serving Temperature <span class="required">*</span></label>
+              <div class="chip-group">
+                <label class="chip-option">
+                  <input type="radio" name="temperature" value="Too Cold">
+                  <span class="chip-label">❄️ Too Cold</span>
+                </label>
+                <label class="chip-option">
+                  <input type="radio" name="temperature" value="Acceptable" checked>
+                  <span class="chip-label">👌 Acceptable</span>
+                </label>
+                <label class="chip-option">
+                  <input type="radio" name="temperature" value="Hot/Fresh">
+                  <span class="chip-label">🔥 Hot & Fresh</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Portion -->
+            <div class="form-group">
+              <label class="form-label">Initial Portion Size <span class="required">*</span></label>
+              <div class="chip-group">
+                <label class="chip-option">
+                  <input type="radio" name="portion" value="Too Little">
+                  <span class="chip-label">📉 Too Little</span>
+                </label>
+                <label class="chip-option">
+                  <input type="radio" name="portion" value="Appropriate" checked>
+                  <span class="chip-label">⚖️ Appropriate</span>
+                </label>
+                <label class="chip-option">
+                  <input type="radio" name="portion" value="Too Much">
+                  <span class="chip-label">📈 Too Much</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===================================================================
+               STEP 4: FOOD WASTAGE ANALYSIS
+               =================================================================== -->
+          <div class="form-step" id="step-4">
+            <div class="step-header">
+              <h2>Step 4: Plate Wastage Analysis</h2>
+              <p>Tracking left-over food allows our kitchen to adjust batch prep sizes and eliminate waste.</p>
+            </div>
+
+            <!-- Wastage Level -->
+            <div class="form-group">
+              <label class="form-label">How much food did you leave on your plate? <span class="required">*</span></label>
+              <div class="chip-group">
+                <label class="chip-option">
+                  <input type="radio" name="wastage_level" value="None" checked>
+                  <span class="chip-label">✨ None (Clean Plate)</span>
+                </label>
+                <label class="chip-option">
+                  <input type="radio" name="wastage_level" value="Very Little">
+                  <span class="chip-label">🤏 Very Little</span>
+                </label>
+                <label class="chip-option">
+                  <input type="radio" name="wastage_level" value="Some">
+                  <span class="chip-label">🥣 Some Left</span>
+                </label>
+                <label class="chip-option">
+                  <input type="radio" name="wastage_level" value="A lot">
+                  <span class="chip-label">🗑️ A lot Left</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Wastage Reasons (Conditional) -->
+            <div id="wastage-reasons-section" style="display:none; background:#FFFBF0; border:1px solid #FDE68A; padding:1.25rem; border-radius:var(--radius-md); margin-top:1.5rem;">
+              <div class="form-group">
+                <label class="form-label">Primary reason for leaving food <span class="required">*</span></label>
+                <div class="chip-group">
+                  <label class="chip-option">
+                    <input type="radio" name="wastage_reason" value="Taste was poor">
+                    <span class="chip-label">Taste was poor</span>
+                  </label>
+                  <label class="chip-option">
+                    <input type="radio" name="wastage_reason" value="Quality was poor">
+                    <span class="chip-label">Quality was poor</span>
+                  </label>
+                  <label class="chip-option">
+                    <input type="radio" name="wastage_reason" value="Quantity too much">
+                    <span class="chip-label">Quantity was too much</span>
+                  </label>
+                  <label class="chip-option">
+                    <input type="radio" name="wastage_reason" value="Food was cold">
+                    <span class="chip-label">Food was cold</span>
+                  </label>
+                  <label class="chip-option">
+                    <input type="radio" name="wastage_reason" value="Food was repetitive">
+                    <span class="chip-label">Menu was repetitive</span>
+                  </label>
+                  <label class="chip-option">
+                    <input type="radio" name="wastage_reason" value="Hygiene concern">
+                    <span class="chip-label">Hygiene concern</span>
+                  </label>
+                  <label class="chip-option">
+                    <input type="radio" name="wastage_reason" value="Personal preference">
+                    <span class="chip-label">Personal preference</span>
+                  </label>
+                  <label class="chip-option">
+                    <input type="radio" name="wastage_reason" value="Other">
+                    <span class="chip-label">Other reason</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-bottom:0;">
+                <label for="wasted-dish-select" class="form-label">Which dish was left over the most? (Optional)</label>
+                <select id="wasted-dish-select" class="form-control">
+                  <option value="">-- Select Specific Dish --</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===================================================================
+               STEP 5: ANONYMOUS COMMENTS & SUBMISSION
+               =================================================================== -->
+          <div class="form-step" id="step-5">
+            <div class="step-header">
+              <h2>Step 5: Anonymous Comments & Suggestions</h2>
+              <p>Share specific feedback that can help kitchen supervisors improve recipes.</p>
+            </div>
+
+            <div class="form-group">
+              <label for="feedback-comment" class="form-label">Specific Comments on Food & Dining</label>
+              <textarea id="feedback-comment" class="form-control" placeholder="E.g., Dal Tadka was great today with good garlic flavor, but rotis served at counter 2 were slightly cold..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="feedback-suggestion" class="form-label">Constructive Suggestions for Mess Committee</label>
+              <textarea id="feedback-suggestion" class="form-control" placeholder="E.g., Consider adding lemon wedges near salad counter, or offer half-portions of rice on request..."></textarea>
+            </div>
+
+            <div style="background-color:var(--color-primary-subtle); padding:1rem 1.25rem; border-radius:var(--radius-md); border-left:3px solid var(--color-primary); margin-bottom:1.5rem; font-size:0.85rem; color:var(--color-primary-dark);">
+              <strong>Before submission:</strong> Please make sure your feedback is honest and respectful. Your opinion matters and is analyzed directly by college administration.
+            </div>
+          </div>
+
+          <!-- Bottom Navigation Action Bar -->
+          <div class="form-actions">
+            <button type="button" class="btn btn-outline" id="btn-prev-step" style="display:none;">
+              ← Previous Step
+            </button>
+            <div style="flex:1;"></div>
+            <button type="button" class="btn btn-primary" id="btn-next-step">
+              Continue to Step 2 →
+            </button>
+            <button type="submit" class="btn btn-accent btn-lg" id="btn-submit-feedback" style="display:none;">
+              Submit Anonymous Feedback
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="brand">
+            <div class="brand-icon">🍽</div>
+            <div class="brand-text">
+              <span class="brand-title">Mess Feedback Analyzer</span>
+            </div>
+          </a>
+          <p>An anonymous student feedback and food-wastage analysis system designed for college dining halls.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Public Portal</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="menu.html">Today's Menu</a></li>
+            <li><a href="feedback.html">Give Feedback</a></li>
+            <li><a href="about.html">How It Works</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Admin & Ops</h4>
+          <ul class="footer-links">
+            <li><a href="admin/login.html">Admin Sign In</a></li>
+            <li><a href="admin/dashboard.html">Admin Dashboard</a></li>
+            <li><a href="admin/feedback.html">Feedback Records</a></li>
+            <li><a href="admin/reports.html">Reports & Exports</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Data Science</h4>
+          <ul class="footer-links">
+            <li><a href="about.html#sentiment">Sentiment Classifier</a></li>
+            <li><a href="about.html#wastage">Wastage Analysis</a></li>
+            <li><a href="about.html#viva">Viva Presentation</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2026 Mess Menu Feedback Analyzer. Academic Project for B.Tech Data Science.</div>
+        <div>Built with PHP 8, MySQL 8, Vanilla JS & Chart.js</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/feedback.js"></script>
+</body>
+</html>

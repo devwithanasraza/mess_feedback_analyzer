@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food Wastage Analytics | Mess Menu Feedback Analyzer</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body class="admin-body">
+
+  <!-- Admin Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand-icon">🍽</div>
+      <div class="sidebar-brand-text">
+        <span class="sidebar-brand-title">Mess Analyzer</span>
+        <span class="sidebar-brand-badge">Admin Operations</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">Analytics & Operations</div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item">
+          <a href="dashboard.html" class="sidebar-link">
+            <span>📊</span> Dashboard
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="menu.html" class="sidebar-link">
+            <span>📋</span> Menu Management
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="feedback.html" class="sidebar-link">
+            <span>💬</span> Feedback Records
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="analytics.html" class="sidebar-link">
+            <span>📈</span> Food Quality Analytics
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="wastage.html" class="sidebar-link active">
+            <span>♻️</span> Wastage Analytics
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="reports.html" class="sidebar-link">
+            <span>📄</span> Reports & CSV Export
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="admin-user-info">
+        <div class="admin-avatar">AD</div>
+        <div>
+          <div class="admin-details-name admin-display-name">Mess Admin</div>
+          <div class="admin-details-role">Operations Lead</div>
+        </div>
+      </div>
+      <button type="button" id="admin-logout-btn" class="logout-btn" title="Sign Out">🚪</button>
+    </div>
+  </aside>
+
+  <!-- Main Content Wrapper -->
+  <div class="admin-main">
+    
+    <!-- Top Bar -->
+    <header class="admin-topbar">
+      <div class="admin-topbar-left">
+        <button type="button" class="sidebar-toggle-btn" aria-label="Toggle navigation drawer">☰</button>
+        <div>
+          <div class="page-breadcrumb">Sustainability / Plate Waste</div>
+          <h1 class="page-title-heading">Food Wastage Analytics</h1>
+        </div>
+      </div>
+
+      <div class="admin-topbar-right">
+        <div style="display:flex; background:#E2E8F0; padding:0.25rem; border-radius:var(--radius-md);">
+          <button type="button" class="page-btn wastage-range-btn" data-days="7">7 Days</button>
+          <button type="button" class="page-btn wastage-range-btn" data-days="14">14 Days</button>
+          <button type="button" class="page-btn wastage-range-btn active" data-days="30">30 Days</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="admin-content-area">
+      
+      <!-- Wastage KPI Cards (Section 11) -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-title">Reported Waste Incidents</div>
+          <div class="kpi-value" id="waste-total-incidents" style="color:#DC2626;">--</div>
+          <div class="kpi-subtext" id="waste-rate-sub">--% of total meals</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-title">Average Wastage Level</div>
+          <div class="kpi-value" id="waste-severity-label">--</div>
+          <div class="kpi-subtext" id="waste-index-sub">Index: -- / 3.0</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-title">Highest Wastage Meal</div>
+          <div class="kpi-value" id="waste-worst-meal" style="font-size:1.6rem;">--</div>
+          <div class="kpi-subtext">Peak plate waste session</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-title">Most Wasted Dish</div>
+          <div class="kpi-value" id="waste-worst-dish" style="font-size:1.2rem; line-height:1.2; padding-top:0.35rem;">--</div>
+          <div class="kpi-subtext">Requires batch resize</div>
+        </div>
+
+        <div class="kpi-card" style="grid-column: span 2;">
+          <div class="kpi-title">Primary Wastage Driver</div>
+          <div class="kpi-value" id="waste-top-reason" style="font-size:1.5rem; color:#D97706;">--</div>
+          <div class="kpi-subtext">Most frequent student complaint</div>
+        </div>
+      </div>
+
+      <!-- Actionable Kitchen Insights (Section 11) -->
+      <div class="insights-section">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+          <h2 style="font-size:1.15rem; font-weight:800; color:var(--color-primary-dark);">
+            🎯 Actionable Kitchen Insights (Real MySQL Calculations)
+          </h2>
+          <span style="font-size:0.75rem; color:var(--color-text-muted);">Dynamic procurement & preparation guidance</span>
+        </div>
+        <div class="insights-grid" id="wastage-insights-container">
+          <div class="skeleton" style="height: 80px;"></div>
+          <div class="skeleton" style="height: 80px;"></div>
+        </div>
+      </div>
+
+      <!-- Charts Row 1: Wastage by Meal & Wastage by Dish -->
+      <div class="charts-grid-2col">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h3 class="chart-title">Wastage by Meal Session</h3>
+              <span class="chart-subtitle">Severity score across Breakfast, Lunch, Snacks, Dinner</span>
+            </div>
+            <span class="badge badge-warning">Meal Sessions</span>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-meal-waste"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h3 class="chart-title">Top 6 Wasted Dishes</h3>
+              <span class="chart-subtitle">Dishes most cited by students for plate left-overs</span>
+            </div>
+            <span class="badge badge-danger">High Plate Waste</span>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-dish-waste"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row 2: Wastage Reasons Breakdown & Daily Trend -->
+      <div class="charts-grid-2col">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h3 class="chart-title">Root Causes / Reasons</h3>
+              <span class="chart-subtitle">Distribution of reported wastage reasons</span>
+            </div>
+            <span class="badge badge-neutral">Categorical Breakdown</span>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-waste-reasons"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h3 class="chart-title">Daily Wastage Trend</h3>
+              <span class="chart-subtitle">Average waste index over time</span>
+            </div>
+            <span class="badge badge-info">Time-Series</span>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-daily-waste-trend"></canvas>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/admin.js"></script>
+  <script>
+    let wastageCharts = {};
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadWastageData(30);
+
+      document.querySelectorAll('.wastage-range-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.wastage-range-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const days = parseInt(btn.dataset.days, 10) || 30;
+          loadWastageData(days);
+        });
+      });
+    });
+
+    async function loadWastageData(days = 30) {
+      const res = await apiFetch(`../api/wastage_data.php?days=${days}`);
+      if (!res.success) {
+        showToast(res.error || 'Failed to load wastage data.', 'error');
+        return;
+      }
+
+      // Update KPIs
+      const k = res.kpis;
+      document.getElementById('waste-total-incidents').textContent = k.waste_incidents;
+      document.getElementById('waste-rate-sub').textContent = `${k.waste_rate}% of total meals reviewed`;
+      document.getElementById('waste-severity-label').textContent = k.severity_label;
+      document.getElementById('waste-index-sub').textContent = `Severity Index: ${k.avg_wastage_index} / 3.0`;
+      document.getElementById('waste-worst-meal').textContent = k.highest_waste_meal;
+      document.getElementById('waste-worst-dish').textContent = k.most_wasted_dish;
+      document.getElementById('waste-top-reason').textContent = k.main_wastage_reason;
+
+      // Render Actionable Insights
+      renderWastageInsights(res.actionable_insights);
+
+      // Render Charts
+      renderWastageCharts(res.charts);
+    }
+
+    function renderWastageInsights(insights) {
+      const container = document.getElementById('wastage-insights-container');
+      if (!insights || insights.length === 0) {
+        container.innerHTML = '<p class="empty-desc">No high wastage anomalies detected.</p>';
+        return;
+      }
+
+      let html = '';
+      insights.forEach(item => {
+        html += `
+          <div class="insight-item ${item.level === 'high' ? 'danger' : (item.level === 'medium' ? 'warning' : 'info')}">
+            <div class="insight-icon">${item.level === 'high' ? '⚠️' : '⚡'}</div>
+            <div class="insight-content">
+              <h4>${escapeHtml(item.title)}</h4>
+              <p>${escapeHtml(item.text)}</p>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function renderWastageCharts(charts) {
+      if (!charts || typeof Chart === 'undefined') return;
+
+      Object.keys(wastageCharts).forEach(key => {
+        if (wastageCharts[key]) wastageCharts[key].destroy();
+      });
+
+      // Chart 1: Wastage by Meal (Bar)
+      const ctx1 = document.getElementById('chart-meal-waste')?.getContext('2d');
+      if (ctx1 && charts.meal_waste) {
+        wastageCharts.meal = new Chart(ctx1, {
+          type: 'bar',
+          data: {
+            labels: charts.meal_waste.labels,
+            datasets: [{
+              label: 'Wastage Index (0 to 3)',
+              data: charts.meal_waste.scores,
+              backgroundColor: '#E11D48',
+              borderRadius: 6,
+              maxBarThickness: 45
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: { min: 0, max: 3, grid: { color: '#F1F5F9' } },
+              x: { grid: { display: false } }
+            }
+          }
+        });
+      }
+
+      // Chart 2: Wastage by Dish (Horizontal Bar)
+      const ctx2 = document.getElementById('chart-dish-waste')?.getContext('2d');
+      if (ctx2 && charts.dish_waste) {
+        wastageCharts.dish = new Chart(ctx2, {
+          type: 'bar',
+          data: {
+            labels: charts.dish_waste.labels,
+            datasets: [{
+              label: 'Wastage Reports',
+              data: charts.dish_waste.counts,
+              backgroundColor: '#F97316',
+              borderRadius: 4
+            }]
+          },
+          options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: { grid: { color: '#F1F5F9' } },
+              y: { grid: { display: false } }
+            }
+          }
+        });
+      }
+
+      // Chart 3: Reasons Breakdown (Doughnut)
+      const ctx3 = document.getElementById('chart-waste-reasons')?.getContext('2d');
+      if (ctx3 && charts.reasons) {
+        wastageCharts.reasons = new Chart(ctx3, {
+          type: 'doughnut',
+          data: {
+            labels: charts.reasons.labels,
+            datasets: [{
+              data: charts.reasons.counts,
+              backgroundColor: ['#EF4444', '#F59E0B', '#3B82F6', '#10B981', '#8B5CF6', '#EC4899', '#6B7280', '#14B8A6']
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } }
+          }
+        });
+      }
+
+      // Chart 4: Daily Trend (Line)
+      const ctx4 = document.getElementById('chart-daily-waste-trend')?.getContext('2d');
+      if (ctx4 && charts.daily_trend) {
+        wastageCharts.trend = new Chart(ctx4, {
+          type: 'line',
+          data: {
+            labels: charts.daily_trend.labels,
+            datasets: [{
+              label: 'Daily Wastage Index',
+              data: charts.daily_trend.scores,
+              borderColor: '#DC2626',
+              backgroundColor: 'rgba(220, 38, 38, 0.08)',
+              fill: true,
+              tension: 0.35
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: { min: 0, max: 3, grid: { color: '#F1F5F9' } },
+              x: { grid: { display: false } }
+            }
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>

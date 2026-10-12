@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mess Menu Feedback Analyzer | College Dining Intelligence</title>
+  <meta name="description" content="Anonymous student feedback and food-wastage analysis system for college mess dining halls.">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+  <!-- Site Navigation Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">🍽</div>
+        <div class="brand-text">
+          <span class="brand-title">Mess Feedback Analyzer</span>
+          <span class="brand-tag">Campus Dining Intelligence</span>
+        </div>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="index.html" class="nav-link active">Home</a></li>
+        <li><a href="menu.html" class="nav-link">Today's Menu</a></li>
+        <li><a href="feedback.html" class="nav-link">Give Feedback</a></li>
+        <li><a href="about.html" class="nav-link">How It Works & DS</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="feedback.html" class="btn btn-accent btn-sm">Give Feedback</a>
+        <a href="admin/login.html" class="btn btn-outline btn-sm">Admin Portal</a>
+        <button class="mobile-menu-btn" aria-label="Toggle navigation">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <div class="hero-tag">
+            <span>●</span> Academic Data Science Project
+          </div>
+          <h1 class="hero-title">Make Every Meal Better.</h1>
+          <p class="hero-subtitle">
+            Share honest feedback anonymously. Help your mess improve food quality, reduce wastage and build a better dining experience.
+          </p>
+
+          <div class="hero-ctas">
+            <a href="feedback.html" class="btn btn-primary btn-lg">Give Feedback</a>
+            <a href="menu.html" class="btn btn-outline btn-lg">View Today's Menu</a>
+          </div>
+
+          <div class="hero-guarantee">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <span>100% Anonymous. No roll number, email, or identity required.</span>
+          </div>
+        </div>
+
+        <!-- Live Metrics Preview Card -->
+        <div class="preview-card" id="hero-preview-widget">
+          <div class="preview-header">
+            <div class="preview-title">
+              <span>📊</span> Live Campus Mess Pulse
+            </div>
+            <span class="preview-badge" id="preview-date-badge">Live System Data</span>
+          </div>
+
+          <div class="preview-metrics-grid">
+            <div class="preview-metric-box">
+              <div class="metric-label">Average Food Rating</div>
+              <div class="metric-value" id="preview-avg-rating">3.3★</div>
+              <div class="metric-sub">Across all student reviews</div>
+            </div>
+
+            <div class="preview-metric-box">
+              <div class="metric-label">Student Satisfaction</div>
+              <div class="metric-value" id="preview-satisfaction">67%</div>
+              <div class="metric-sub">Weighted quality index</div>
+            </div>
+
+            <div class="preview-metric-box">
+              <div class="metric-label">Food Wastage</div>
+              <div class="metric-value" id="preview-wastage" style="color:#DC2626;">38%</div>
+              <div class="metric-sub">Meals with left-over waste</div>
+            </div>
+
+            <div class="preview-metric-box">
+              <div class="metric-label">Today's Meal Rating</div>
+              <div class="metric-value" id="preview-today-rating">3.5★</div>
+              <div class="metric-sub" id="preview-today-meal">Breakfast & Lunch</div>
+            </div>
+          </div>
+
+          <div class="preview-highlight">
+            <strong>Data Science Insight:</strong> Student feedback is aggregated real-time via MySQL statistical queries to give mess administrators concrete menu improvement recommendations.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Three Core Feature Cards -->
+    <section class="features-section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-tag">Key Principles</span>
+          <h2 class="section-title">Built for Students, Actionable for Mess Staff</h2>
+          <p class="section-desc">
+            Bridging the communication gap between hostellers and catering staff through transparent data science.
+          </p>
+        </div>
+
+        <div class="cards-grid">
+          <!-- Card 1 -->
+          <div class="feature-card">
+            <div class="feature-card-header">
+              <div class="feature-icon-wrapper">🔒</div>
+              <h3 class="feature-title">Anonymous Feedback</h3>
+            </div>
+            <p class="feature-desc">
+              Your identity stays private while your feedback helps improve the mess. No roll numbers, email addresses, or student IDs are ever recorded.
+            </p>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="feature-card">
+            <div class="feature-card-header">
+              <div class="feature-icon-wrapper">📈</div>
+              <h3 class="feature-title">Food Quality Insights</h3>
+            </div>
+            <p class="feature-desc">
+              Understand what students actually like and dislike. Every dish is rated across taste, freshness, portion, and temperature attributes.
+            </p>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="feature-card">
+            <div class="feature-card-header">
+              <div class="feature-icon-wrapper">♻️</div>
+              <h3 class="feature-title">Reduce Food Waste</h3>
+            </div>
+            <p class="feature-desc">
+              Identify wastage patterns and make smarter menu decisions. Correlate plate waste with portion sizing and preparation recipes.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="workflow-section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-tag">Feedback Lifecycle</span>
+          <h2 class="section-title">How It Works</h2>
+          <p class="section-desc">A transparent four-step loop that transforms individual dining experiences into institutional improvements.</p>
+        </div>
+
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <div class="step-num">1</div>
+            <h3 class="step-title">Eat Your Meal</h3>
+            <p class="step-desc">Enjoy breakfast, lunch, snacks, or dinner at your hostel dining hall.</p>
+          </div>
+
+          <div class="workflow-step">
+            <div class="step-num">2</div>
+            <h3 class="step-title">Share Honest Opinion</h3>
+            <p class="step-desc">Take 45 seconds to rate dishes and note any food left over without sharing your identity.</p>
+          </div>
+
+          <div class="workflow-step">
+            <div class="step-num">3</div>
+            <h3 class="step-title">System Analyzes Feedback</h3>
+            <p class="step-desc">The application classifies sentiments, computes weighted satisfaction, and flags waste drivers.</p>
+          </div>
+
+          <div class="workflow-step">
+            <div class="step-num">4</div>
+            <h3 class="step-title">Mess Improves Future Meals</h3>
+            <p class="step-desc">Mess supervisors use automated analytics and reports to optimize recipes and procurement.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Academic Banner -->
+    <section class="academic-banner">
+      <div class="container academic-inner">
+        <span class="academic-badge">Academic Project</span>
+        <h2 class="academic-title">B.Tech Data Science 1st-Year Academic Project</h2>
+        <p class="academic-text">
+          Demonstrates applied statistical aggregation, weighted satisfaction scoring, rule-based sentiment classification, and SQL relational modeling with PHP and MySQL.
+        </p>
+        <div style="margin-top: 1.5rem;">
+          <a href="about.html" class="btn btn-accent btn-sm">Read Data Science Methodology</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="brand">
+            <div class="brand-icon">🍽</div>
+            <div class="brand-text">
+              <span class="brand-title">Mess Feedback Analyzer</span>
+            </div>
+          </a>
+          <p>
+            An anonymous student feedback and food-wastage analysis system designed for college dining halls.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Public Portal</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="menu.html">Today's Menu</a></li>
+            <li><a href="feedback.html">Give Feedback</a></li>
+            <li><a href="about.html">How It Works</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Admin & Ops</h4>
+          <ul class="footer-links">
+            <li><a href="admin/login.html">Admin Sign In</a></li>
+            <li><a href="admin/dashboard.html">Admin Dashboard</a></li>
+            <li><a href="admin/analytics.html">Food Analytics</a></li>
+            <li><a href="admin/wastage.html">Wastage Analytics</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Academic Info</h4>
+          <ul class="footer-links">
+            <li><a href="about.html#methodology">Data Science Formulas</a></li>
+            <li><a href="about.html#privacy">Privacy Architecture</a></li>
+            <li><a href="about.html#viva">Viva Presentation Guide</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2026 Mess Menu Feedback Analyzer. Academic Project for B.Tech Data Science.</div>
+        <div>Built with PHP 8, MySQL 8, Vanilla JS & Chart.js</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    // Live update hero preview card metrics from database
+    document.addEventListener('DOMContentLoaded', async () => {
+      const res = await apiFetch('api/dashboard_data.php?days=30');
+      if (res.success && res.kpis) {
+        document.getElementById('preview-avg-rating').textContent = `${res.kpis.average_rating}★`;
+        document.getElementById('preview-satisfaction').textContent = `${res.kpis.satisfaction_score}%`;
+        document.getElementById('preview-wastage').textContent = `${res.kpis.wastage_rate}%`;
+        
+        // Today's meal rating
+        if (res.charts && res.charts.meal_ratings && res.charts.meal_ratings.ratings.length > 0) {
+          const validRatings = res.charts.meal_ratings.ratings.filter(r => r > 0);
+          const topRating = validRatings.length > 0 ? Math.max(...validRatings) : 3.5;
+          document.getElementById('preview-today-rating').textContent = `${topRating}★`;
+        }
+      }
+    });
+  </script>
+</body>
+</html>

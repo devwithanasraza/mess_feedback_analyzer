@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Mess Menu Feedback Analyzer</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body class="admin-body">
+
+  <!-- Admin Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand-icon">🍽</div>
+      <div class="sidebar-brand-text">
+        <span class="sidebar-brand-title">Mess Analyzer</span>
+        <span class="sidebar-brand-badge">Admin Operations</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">Analytics & Operations</div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item">
+          <a href="dashboard.html" class="sidebar-link active">
+            <span>📊</span> Dashboard
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="menu.html" class="sidebar-link">
+            <span>📋</span> Menu Management
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="feedback.html" class="sidebar-link">
+            <span>💬</span> Feedback Records
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="analytics.html" class="sidebar-link">
+            <span>📈</span> Food Quality Analytics
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="wastage.html" class="sidebar-link">
+            <span>♻️</span> Wastage Analytics
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="reports.html" class="sidebar-link">
+            <span>📄</span> Reports & CSV Export
+          </a>
+        </li>
+      </ul>
+
+      <div class="nav-group-title">Public Portal</div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item">
+          <a href="../menu.html" target="_blank" class="sidebar-link">
+            <span>🌐</span> View Today's Menu
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="../feedback.html" target="_blank" class="sidebar-link">
+            <span>📝</span> Student Feedback Form
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="../about.html" target="_blank" class="sidebar-link">
+            <span>📘</span> Data Science Docs
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="admin-user-info">
+        <div class="admin-avatar">AD</div>
+        <div>
+          <div class="admin-details-name admin-display-name">Mess Admin</div>
+          <div class="admin-details-role">Operations Lead</div>
+        </div>
+      </div>
+      <button type="button" id="admin-logout-btn" class="logout-btn" title="Sign Out">
+        🚪
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content Wrapper -->
+  <div class="admin-main">
+    
+    <!-- Top Bar -->
+    <header class="admin-topbar">
+      <div class="admin-topbar-left">
+        <button type="button" class="sidebar-toggle-btn" aria-label="Toggle navigation drawer">☰</button>
+        <div>
+          <div class="page-breadcrumb">Mess Menu Feedback Analyzer / Operations</div>
+          <h1 class="page-title-heading">Admin Dashboard</h1>
+        </div>
+      </div>
+
+      <div class="admin-topbar-right">
+        <!-- Range Filter Buttons -->
+        <div style="display:flex; background:#E2E8F0; padding:0.25rem; border-radius:var(--radius-md);">
+          <button type="button" class="page-btn range-filter-btn" data-days="7">7 Days</button>
+          <button type="button" class="page-btn range-filter-btn" data-days="14">14 Days</button>
+          <button type="button" class="page-btn range-filter-btn active" data-days="30">30 Days</button>
+        </div>
+
+        <a href="reports.html" class="btn btn-sm btn-outline">
+          Export CSV
+        </a>
+      </div>
+    </header>
+
+    <div class="admin-content-area">
+      
+      <!-- 6 KPI Cards (Real MySQL Aggregations) -->
+      <div class="kpi-grid">
+        <!-- KPI 1 -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Total Feedback</span>
+            <div class="kpi-icon-pill" style="background:#EBF8FF; color:#2B6CB0;">📝</div>
+          </div>
+          <div class="kpi-value" id="kpi-total-feedback">--</div>
+          <div class="kpi-subtext">Verified anonymous responses</div>
+        </div>
+
+        <!-- KPI 2 -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Average Rating</span>
+            <div class="kpi-icon-pill" style="background:#FEF3C7; color:#D97706;">★</div>
+          </div>
+          <div class="kpi-value" id="kpi-avg-rating">--</div>
+          <div class="kpi-subtext">Overall 1-5 star dining scale</div>
+        </div>
+
+        <!-- KPI 3 -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Satisfaction</span>
+            <div class="kpi-icon-pill" style="background:#E8F5E9; color:#2E7D32;">🎯</div>
+          </div>
+          <div class="kpi-value" id="kpi-satisfaction-score">--</div>
+          <div class="kpi-subtext" id="kpi-satisfaction-sub">Weighted quality index</div>
+        </div>
+
+        <!-- KPI 4 -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Food Wastage</span>
+            <div class="kpi-icon-pill" style="background:#FEE2E2; color:#DC2626;">♻️</div>
+          </div>
+          <div class="kpi-value" id="kpi-wastage-rate" style="color:#DC2626;">--</div>
+          <div class="kpi-subtext">Meals with left-over waste</div>
+        </div>
+
+        <!-- KPI 5 -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Positive Feedback</span>
+            <div class="kpi-icon-pill" style="background:#ECFDF5; color:#059669;">👍</div>
+          </div>
+          <div class="kpi-value" id="kpi-positive-feedback" style="color:#059669;">--</div>
+          <div class="kpi-subtext">Sentiment analysis score &gt; 0</div>
+        </div>
+
+        <!-- KPI 6 -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Negative Feedback</span>
+            <div class="kpi-icon-pill" style="background:#FFF1F2; color:#E11D48;">👎</div>
+          </div>
+          <div class="kpi-value" id="kpi-negative-feedback" style="color:#E11D48;">--</div>
+          <div class="kpi-subtext">Requires kitchen follow-up</div>
+        </div>
+      </div>
+
+      <!-- Actionable Insights Banner (Calculated Live from DB) -->
+      <div class="insights-section">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+          <h2 style="font-size:1.15rem; font-weight:800; color:var(--color-primary-dark);">
+            💡 Actionable Operations Insights (Live Database Calculated)
+          </h2>
+          <span style="font-size:0.75rem; color:var(--color-text-muted);">Evaluated dynamically from feedback records</span>
+        </div>
+        <div class="insights-grid" id="actionable-insights-container">
+          <div class="skeleton" style="height: 90px;"></div>
+          <div class="skeleton" style="height: 90px;"></div>
+        </div>
+      </div>
+
+      <!-- Row 1: Chart 1 (Rating by Meal) & Chart 2 (Weekly Satisfaction Trend) -->
+      <div class="charts-grid-2col">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h3 class="chart-title">Average Rating by Meal</h3>
+              <span class="chart-subtitle">Breakfast vs Lunch vs Snacks vs Dinner</span>
+            </div>
+            <span class="badge badge-neutral">1 - 5 Scale</span>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-meal-ratings"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h3 class="chart-title">Weekly Satisfaction Trend</h3>
+              <span class="chart-subtitle">Daily aggregated satisfaction percentage</span>
+            </div>
+            <span class="badge badge-success">0 - 100% Scale</span>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-satisfaction-trend"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2: Chart 3 (Wastage Trend) & Chart 6 (Feedback Sentiment) -->
+      <div class="charts-grid-2col">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h3 class="chart-title">Food Wastage Trend Over Time</h3>
+              <span class="chart-subtitle">Percentage of reviews noting plate wastage</span>
+            </div>
+            <span class="badge badge-danger">Wastage %</span>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-wastage-trend"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h3 class="chart-title">Feedback Sentiment Classification</h3>
+              <span class="chart-subtitle">Keyword lexicon distribution</span>
+            </div>
+            <span class="badge badge-neutral">Sentiment Polarities</span>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-sentiment"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 3: Chart 4 (Most Liked), Chart 5 (Least Liked), Chart 7 (Meal Satisfaction) -->
+      <div class="charts-grid-3col">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h3 class="chart-title">Top 5 Liked Dishes</h3>
+              <span class="chart-subtitle">Highest student rating</span>
+            </div>
+            <span class="badge badge-success">Top Ranked</span>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-top-dishes"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h3 class="chart-title">Top 5 Least Liked Dishes</h3>
+              <span class="chart-subtitle">Require recipe revision</span>
+            </div>
+            <span class="badge badge-danger">Low Ranked</span>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-bottom-dishes"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h3 class="chart-title">Meal-wise Satisfaction</h3>
+              <span class="chart-subtitle">Normalized meal satisfaction</span>
+            </div>
+            <span class="badge badge-info">Comparison</span>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-meal-satisfaction"></canvas>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/admin.js"></script>
+  <script src="../assets/js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anonymous Feedback Records | Mess Menu Feedback Analyzer</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+</head>
+<body class="admin-body">
+
+  <!-- Admin Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand-icon">🍽</div>
+      <div class="sidebar-brand-text">
+        <span class="sidebar-brand-title">Mess Analyzer</span>
+        <span class="sidebar-brand-badge">Admin Operations</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">Analytics & Operations</div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item">
+          <a href="dashboard.html" class="sidebar-link">
+            <span>📊</span> Dashboard
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="menu.html" class="sidebar-link">
+            <span>📋</span> Menu Management
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="feedback.html" class="sidebar-link active">
+            <span>💬</span> Feedback Records
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="analytics.html" class="sidebar-link">
+            <span>📈</span> Food Quality Analytics
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="wastage.html" class="sidebar-link">
+            <span>♻️</span> Wastage Analytics
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="reports.html" class="sidebar-link">
+            <span>📄</span> Reports & CSV Export
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="admin-user-info">
+        <div class="admin-avatar">AD</div>
+        <div>
+          <div class="admin-details-name admin-display-name">Mess Admin</div>
+          <div class="admin-details-role">Operations Lead</div>
+        </div>
+      </div>
+      <button type="button" id="admin-logout-btn" class="logout-btn" title="Sign Out">🚪</button>
+    </div>
+  </aside>
+
+  <!-- Main Content Wrapper -->
+  <div class="admin-main">
+    
+    <!-- Top Bar -->
+    <header class="admin-topbar">
+      <div class="admin-topbar-left">
+        <button type="button" class="sidebar-toggle-btn" aria-label="Toggle navigation drawer">☰</button>
+        <div>
+          <div class="page-breadcrumb">Operations / Data Ingestion</div>
+          <h1 class="page-title-heading">Anonymous Feedback Records</h1>
+        </div>
+      </div>
+
+      <div class="admin-topbar-right">
+        <a href="reports.html" class="btn btn-sm btn-outline">
+          Export Anonymous CSV
+        </a>
+      </div>
+    </header>
+
+    <div class="admin-content-area">
+      
+      <!-- Privacy Banner -->
+      <div style="background:#E8F5E9; border-left:4px solid #2E7D5B; padding:1rem 1.25rem; border-radius:0 var(--radius-md) var(--radius-md) 0; margin-bottom:1.5rem; font-size:0.88rem; color:#1B5E20;">
+        <strong>Anonymity Guarantee:</strong> As per project privacy architecture, student identities (names, roll numbers, emails) are not collected. All entries represent verified dining hall submissions.
+      </div>
+
+      <!-- Filters & Search Toolbar (Section 14) -->
+      <div class="table-card">
+        <div class="table-toolbar">
+          <div class="table-filters" style="width:100%;">
+            <input type="text" id="filter-search" class="search-input" placeholder="Search comments or suggestions..." style="min-width:240px; flex:1;">
+            
+            <select id="filter-meal" class="filter-select">
+              <option value="All">All Meals</option>
+              <option value="Breakfast">Breakfast</option>
+              <option value="Lunch">Lunch</option>
+              <option value="Snacks">Snacks</option>
+              <option value="Dinner">Dinner</option>
+            </select>
+
+            <select id="filter-sentiment" class="filter-select">
+              <option value="All">All Sentiments</option>
+              <option value="Positive">Positive</option>
+              <option value="Neutral">Neutral</option>
+              <option value="Negative">Negative</option>
+            </select>
+
+            <select id="filter-wastage" class="filter-select">
+              <option value="All">All Wastage Levels</option>
+              <option value="None">None</option>
+              <option value="Very Little">Very Little</option>
+              <option value="Some">Some</option>
+              <option value="A lot">A lot</option>
+            </select>
+
+            <select id="filter-rating" class="filter-select">
+              <option value="">All Ratings</option>
+              <option value="5">5 Stars</option>
+              <option value="4">4 Stars</option>
+              <option value="3">3 Stars</option>
+              <option value="2">2 Stars</option>
+              <option value="1">1 Star</option>
+            </select>
+
+            <button type="button" class="btn btn-sm btn-primary" id="btn-apply-filters">Apply Filters</button>
+            <button type="button" class="btn btn-sm btn-outline" id="btn-reset-filters">Reset</button>
+          </div>
+        </div>
+
+        <!-- Feedback Data Table -->
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Date / Time</th>
+                <th>Meal</th>
+                <th>Overall</th>
+                <th>Taste</th>
+                <th>Quality</th>
+                <th>Hygiene</th>
+                <th>Freshness</th>
+                <th>Wastage</th>
+                <th>Sentiment</th>
+                <th style="min-width: 220px;">Student Comment</th>
+                <th style="text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="feedback-tbody">
+              <tr>
+                <td colspan="11" style="text-align:center; padding:2rem;">
+                  <div class="skeleton" style="height:35px; margin-bottom:0.5rem;"></div>
+                  <div class="skeleton" style="height:35px;"></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination Bar -->
+        <div class="pagination-bar">
+          <div id="pagination-info">Showing 0 of 0 records</div>
+          <div class="pagination-controls" id="pagination-controls">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Detail Inspection Modal -->
+  <div class="modal-overlay" id="modal-feedback-detail">
+    <div class="modal-box" style="max-width: 680px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Anonymous Feedback Details</h3>
+        <button type="button" class="modal-close-btn" onclick="closeModal('modal-feedback-detail')">✕</button>
+      </div>
+      <div class="modal-body" id="feedback-detail-body">
+        <!-- Rendered by JS -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="closeModal('modal-feedback-detail')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/admin.js"></script>
+  <script>
+    let currentPage = 1;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadFeedbackList(1);
+
+      document.getElementById('btn-apply-filters').addEventListener('click', () => loadFeedbackList(1));
+      document.getElementById('btn-reset-filters').addEventListener('click', () => {
+        document.getElementById('filter-search').value = '';
+        document.getElementById('filter-meal').value = 'All';
+        document.getElementById('filter-sentiment').value = 'All';
+        document.getElementById('filter-wastage').value = 'All';
+        document.getElementById('filter-rating').value = '';
+        loadFeedbackList(1);
+      });
+
+      document.getElementById('filter-search').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') loadFeedbackList(1);
+      });
+    });
+
+    async function loadFeedbackList(page = 1) {
+      currentPage = page;
+      const tbody = document.getElementById('feedback-tbody');
+      tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; padding:2rem;"><div class="skeleton" style="height:40px;"></div></td></tr>';
+
+      const search = encodeURIComponent(document.getElementById('filter-search').value.trim());
+      const meal = encodeURIComponent(document.getElementById('filter-meal').value);
+      const sentiment = encodeURIComponent(document.getElementById('filter-sentiment').value);
+      const wastage = encodeURIComponent(document.getElementById('filter-wastage').value);
+      const rating = encodeURIComponent(document.getElementById('filter-rating').value);
+
+      const url = `../api/feedback_data.php?page=${page}&limit=12&search=${search}&meal_type=${meal}&sentiment=${sentiment}&wastage_level=${wastage}&rating=${rating}`;
+      const res = await apiFetch(url);
+
+      if (!res.success || !res.records || res.records.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="11" style="text-align:center; padding:2.5rem; color:var(--color-text-muted);">No feedback records match the specified filters.</td></tr>`;
+        document.getElementById('pagination-info').textContent = 'Showing 0 records';
+        document.getElementById('pagination-controls').innerHTML = '';
+        return;
+      }
+
+      let html = '';
+      res.records.forEach(r => {
+        let sentBadge = 'badge-neutral';
+        if (r.sentiment === 'Positive') sentBadge = 'badge-success';
+        else if (r.sentiment === 'Negative') sentBadge = 'badge-danger';
+
+        let wasteBadge = 'badge-success';
+        if (r.wastage_level === 'A lot') wasteBadge = 'badge-danger';
+        else if (r.wastage_level === 'Some') wasteBadge = 'badge-warning';
+
+        html += `
+          <tr>
+            <td>
+              <span style="font-weight:600;">${formatDate(r.menu_date)}</span>
+              <span style="font-size:0.75rem; color:var(--color-text-muted); display:block;">${r.created_at.split(' ')[1]}</span>
+            </td>
+            <td><strong>${escapeHtml(r.meal_type)}</strong></td>
+            <td><strong style="color:#D97706;">★ ${r.overall_rating}</strong></td>
+            <td>${r.avg_taste ? r.avg_taste : '-'}</td>
+            <td>${r.avg_quality ? r.avg_quality : '-'}</td>
+            <td>${r.hygiene_rating}</td>
+            <td>${r.avg_freshness ? r.avg_freshness : '-'}</td>
+            <td><span class="badge ${wasteBadge}">${escapeHtml(r.wastage_level)}</span></td>
+            <td><span class="badge ${sentBadge}">${escapeHtml(r.sentiment)}</span></td>
+            <td>
+              <div style="max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${escapeHtml(r.comment || 'No comment provided')}">
+                ${escapeHtml(r.comment || '—')}
+              </div>
+            </td>
+            <td style="text-align:right;">
+              <button type="button" class="btn btn-sm btn-outline" onclick="inspectFeedback(${r.id})" style="padding:0.25rem 0.6rem; font-size:0.78rem;">
+                Inspect
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+
+      // Update Pagination
+      const p = res.pagination;
+      document.getElementById('pagination-info').textContent = `Showing Page ${p.page} of ${p.total_pages} (${p.total} total submissions)`;
+
+      let pagHtml = '';
+      pagHtml += `<button type="button" class="page-btn" ${p.page <= 1 ? 'disabled' : ''} onclick="loadFeedbackList(${p.page - 1})">Previous</button>`;
+      
+      const maxButtons = 5;
+      let startP = Math.max(1, p.page - 2);
+      let endP = Math.min(p.total_pages, startP + maxButtons - 1);
+      if (endP - startP < maxButtons - 1) startP = Math.max(1, endP - maxButtons + 1);
+
+      for (let i = startP; i <= endP; i++) {
+        pagHtml += `<button type="button" class="page-btn ${i === p.page ? 'active' : ''}" onclick="loadFeedbackList(${i})">${i}</button>`;
+      }
+
+      pagHtml += `<button type="button" class="page-btn" ${p.page >= p.total_pages ? 'disabled' : ''} onclick="loadFeedbackList(${p.page + 1})">Next</button>`;
+      document.getElementById('pagination-controls').innerHTML = pagHtml;
+    }
+
+    async function inspectFeedback(id) {
+      const res = await apiFetch(`../api/feedback_data.php?id=${id}`);
+      if (!res.success || !res.feedback) {
+        showToast('Failed to load feedback details.', 'error');
+        return;
+      }
+
+      const fb = res.feedback;
+      let html = `
+        <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:1rem; margin-bottom:1.25rem; background:#FAFBF9; padding:1rem; border-radius:var(--radius-md);">
+          <div>
+            <span style="font-size:0.75rem; color:var(--color-text-muted);">Meal Session:</span>
+            <div style="font-weight:700;">${escapeHtml(fb.meal_type)} (${formatDate(fb.menu_date)})</div>
+          </div>
+          <div>
+            <span style="font-size:0.75rem; color:var(--color-text-muted);">Overall & Hygiene:</span>
+            <div style="font-weight:700;">Overall: ★ ${fb.overall_rating} / 5 | Hygiene: ★ ${fb.hygiene_rating} / 5</div>
+          </div>
+          <div>
+            <span style="font-size:0.75rem; color:var(--color-text-muted);">Temperature & Portion:</span>
+            <div style="font-weight:700;">${escapeHtml(fb.temperature)} | Portion: ${escapeHtml(fb.portion)}</div>
+          </div>
+          <div>
+            <span style="font-size:0.75rem; color:var(--color-text-muted);">Wastage Level:</span>
+            <div style="font-weight:700; color:#DC2626;">${escapeHtml(fb.wastage_level)} ${fb.wastage_reason ? '(' + escapeHtml(fb.wastage_reason) + ')' : ''}</div>
+          </div>
+        </div>
+
+        <h4 style="font-size:0.95rem; font-weight:700; margin-bottom:0.5rem;">Dish-Level Evaluations:</h4>
+        <div style="border:1px solid var(--color-border); border-radius:var(--radius-md); overflow:hidden; margin-bottom:1.25rem;">
+          <table class="data-table" style="font-size:0.8rem;">
+            <thead>
+              <tr>
+                <th>Dish</th>
+                <th>Taste</th>
+                <th>Quality</th>
+                <th>Freshness</th>
+                <th>Quantity</th>
+                <th>Repeat?</th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+
+      if (fb.items && fb.items.length > 0) {
+        fb.items.forEach(it => {
+          html += `
+            <tr>
+              <td><strong>${escapeHtml(it.item_name)}</strong></td>
+              <td>★ ${it.taste_rating}</td>
+              <td>★ ${it.quality_rating}</td>
+              <td>★ ${it.freshness_rating}</td>
+              <td>★ ${it.quantity_rating}</td>
+              <td>${escapeHtml(it.repeat_preference)}</td>
+            </tr>
+          `;
+        });
+      } else {
+        html += `<tr><td colspan="6" style="text-align:center;">No dish-level ratings attached.</td></tr>`;
+      }
+
+      html += `
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-bottom:1rem;">
+          <span style="font-size:0.8rem; font-weight:700; color:var(--color-text-muted); display:block; margin-bottom:0.25rem;">Student Comment:</span>
+          <div style="background:#FFFFFF; border:1px solid var(--color-border); padding:0.75rem; border-radius:var(--radius-sm); font-size:0.88rem;">
+            ${escapeHtml(fb.comment || 'No specific comment entered.')}
+          </div>
+        </div>
+
+        <div style="margin-bottom:1rem;">
+          <span style="font-size:0.8rem; font-weight:700; color:var(--color-text-muted); display:block; margin-bottom:0.25rem;">Constructive Suggestions:</span>
+          <div style="background:#FFFFFF; border:1px solid var(--color-border); padding:0.75rem; border-radius:var(--radius-sm); font-size:0.88rem;">
+            ${escapeHtml(fb.suggestion || 'No suggestions entered.')}
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--color-text-muted); border-top:1px solid var(--color-border-subtle); padding-top:0.75rem;">
+          <span>Sentiment: <strong>${escapeHtml(fb.sentiment)}</strong> (Score: ${fb.sentiment_score})</span>
+          <span>Matched Lexicon: ${escapeHtml(fb.sentiment_analysis?.matched_keywords || 'None')}</span>
+        </div>
+      `;
+
+      document.getElementById('feedback-detail-body').innerHTML = html;
+      openModal('modal-feedback-detail');
+    }
+  </script>
+</body>
+</html>

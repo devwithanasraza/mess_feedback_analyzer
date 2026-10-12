@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Science Methodology & Architecture | Mess Menu Feedback Analyzer</title>
+  <meta name="description" content="Academic documentation of data science formulas, anonymous pipeline, sentiment classification, and relational database schema for B.Tech Data Science.">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    .doc-section {
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      margin-bottom: 2.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .doc-section h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--color-primary-dark);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+    .doc-section p, .doc-section li {
+      color: var(--color-text);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+    .formula-box {
+      background-color: #F8FAF9;
+      border: 1px solid #D1DDD6;
+      border-left: 4px solid var(--color-primary);
+      padding: 1.25rem 1.5rem;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      margin: 1.25rem 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.92rem;
+      color: var(--color-primary-dark);
+    }
+    .pipeline-diagram {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+    }
+    .pipeline-node {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 0.65rem 1rem;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--color-primary-dark);
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+    }
+    .pipeline-arrow {
+      color: var(--color-accent-hover);
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Site Navigation Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">🍽</div>
+        <div class="brand-text">
+          <span class="brand-title">Mess Feedback Analyzer</span>
+          <span class="brand-tag">Campus Dining Intelligence</span>
+        </div>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="menu.html" class="nav-link">Today's Menu</a></li>
+        <li><a href="feedback.html" class="nav-link">Give Feedback</a></li>
+        <li><a href="about.html" class="nav-link active">How It Works & DS</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="admin/login.html" class="btn btn-outline btn-sm">Admin Portal</a>
+      </div>
+    </div>
+  </header>
+
+  <main style="padding: 3rem 0 5rem;">
+    <div class="container" style="max-width: 960px;">
+      
+      <!-- Academic Page Heading -->
+      <div style="text-align:center; margin-bottom: 3.5rem;">
+        <span class="badge badge-success" style="font-size:0.82rem; padding:0.3rem 0.85rem; margin-bottom:0.75rem;">
+          Academic Presentation Documentation
+        </span>
+        <h1 style="font-size: 2.5rem; font-weight: 800; color: var(--color-primary-dark); margin-bottom: 0.75rem;">
+          Data Science Methodology & Architecture
+        </h1>
+        <p style="color: var(--color-text-muted); font-size: 1.1rem; max-width: 720px; margin: 0 auto;">
+          An intermediate-level B.Tech Data Science 1st-year project demonstrating transparent statistical aggregation, sentiment polarity scoring, plate wastage correlation, and relational database modeling.
+        </p>
+      </div>
+
+      <!-- 1. End-to-End Pipeline -->
+      <section class="doc-section" id="pipeline">
+        <h2><span>🔄</span> Data Science Pipeline Architecture</h2>
+        <p>The feedback loop converts raw subjective opinions into actionable college administrative decisions through an automated 8-stage pipeline:</p>
+
+        <div class="pipeline-diagram">
+          <div class="pipeline-node">1. Student Feedback</div>
+          <div class="pipeline-arrow">➔</div>
+          <div class="pipeline-node">2. Data Validation</div>
+          <div class="pipeline-arrow">➔</div>
+          <div class="pipeline-node">3. MySQL Database</div>
+          <div class="pipeline-arrow">➔</div>
+          <div class="pipeline-node">4. Data Processing</div>
+          <div class="pipeline-arrow">➔</div>
+          <div class="pipeline-node">5. Statistical Aggregation</div>
+          <div class="pipeline-arrow">➔</div>
+          <div class="pipeline-node">6. Chart.js Visuals</div>
+          <div class="pipeline-arrow">➔</div>
+          <div class="pipeline-node">7. Actionable Insights</div>
+          <div class="pipeline-arrow">➔</div>
+          <div class="pipeline-node">8. Mess Decisions</div>
+        </div>
+
+        <p>
+          Unlike black-box commercial applications, every calculation in this system is mathematically explainable to 1st-year undergraduate students and mess managers alike.
+        </p>
+      </section>
+
+      <!-- 2. Statistical Formulas & Weighted Satisfaction -->
+      <section class="doc-section" id="methodology">
+        <h2><span>📐</span> Statistical Modeling & Weighted Satisfaction</h2>
+        <p>
+          Simple arithmetic averages fail to capture dining satisfaction because food taste and hygiene affect student well-being much more than portion size. We implement a multi-attribute weighted linear combination model:
+        </p>
+
+        <div class="formula-box">
+          Weighted Satisfaction Score (%) = <br>
+          [ (Overall Rating × 40%) + <br>
+          &nbsp;&nbsp;(Average Taste × 20%) + <br>
+          &nbsp;&nbsp;(Average Quality × 15%) + <br>
+          &nbsp;&nbsp;(Mess Hygiene × 10%) + <br>
+          &nbsp;&nbsp;(Food Freshness × 10%) + <br>
+          &nbsp;&nbsp;(Serving Quantity × 5%) ] ÷ 5.0 × 100
+        </div>
+
+        <p><strong>Rationale of Weight Assignments:</strong></p>
+        <ul style="padding-left: 1.5rem; margin-top: 0.5rem;">
+          <li><strong>Overall Rating (40%):</strong> Captures the aggregate subjective meal satisfaction.</li>
+          <li><strong>Taste (20%) & Quality (15%):</strong> Culinary execution and ingredient purity are primary quality indicators.</li>
+          <li><strong>Hygiene (10%) & Freshness (10%):</strong> Food safety parameters that maintain health standards in hostel halls.</li>
+          <li><strong>Quantity (5%):</strong> Baseline sufficiency check; students can usually take second servings if available.</li>
+        </ul>
+      </section>
+
+      <!-- 3. Rule-Based Keyword Sentiment Classifier -->
+      <section class="doc-section" id="sentiment">
+        <h2><span>💬</span> Transparent Sentiment Classification</h2>
+        <p>
+          To maintain transparency without introducing heavy external neural network dependencies, we implemented a <strong>Lexicon-Based Keyword Sentiment Classifier</strong> in PHP.
+        </p>
+
+        <div class="formula-box">
+          Polarity Score = (Positive Matches - Negative Matches) / (Total Matches + 1)<br>
+          Classification Thresholds:<br>
+          • Positive: Score &gt; 0.0 (or Positive Keyword Count &gt; Negative Keyword Count)<br>
+          • Negative: Score &lt; 0.0 (or Negative Keyword Count &gt; Positive Keyword Count)<br>
+          • Neutral:  Score = 0.0 (Equal or zero keyword matches)
+        </div>
+
+        <p><strong>Dictionary Lexicon:</strong></p>
+        <ul style="padding-left: 1.5rem; margin-top: 0.5rem;">
+          <li><strong>Positive Lexicon:</strong> <code>good, great, tasty, fresh, excellent, delicious, nice, amazing, superb, crispy, soft, flavorful, satisfying, perfect, clean, hygienic, love, best, well</code></li>
+          <li><strong>Negative Lexicon:</strong> <code>bad, poor, cold, oily, salty, bland, tasteless, dirty, unhealthy, waste, sour, hard, stale, smelly, delayed, watery, undercooked, burnt, insects, hair, horrible</code></li>
+        </ul>
+      </section>
+
+      <!-- 4. Menu Performance Score & Wastage Penalty -->
+      <section class="doc-section" id="wastage">
+        <h2><span>🍛</span> Dish Performance Score (DPS) Formula</h2>
+        <p>
+          Mess managers need a single comparative index for each recipe to determine whether a dish should be retained, modified, or replaced.
+        </p>
+
+        <div class="formula-box">
+          Dish Performance Score = <br>
+          &nbsp;&nbsp;Average Taste + Average Quality + Average Freshness <br>
+          &nbsp;&nbsp;+ Repeat Preference Bonus (+1.0 / +0.5 / -0.5) <br>
+          &nbsp;&nbsp;- Plate Wastage Penalty (0.0 to 2.5)
+        </div>
+
+        <p><strong>Performance Tiers:</strong></p>
+        <ul style="padding-left: 1.5rem; margin-top: 0.5rem;">
+          <li><span class="badge badge-success">Excellent</span> Score ≥ 12.0: Highly popular, low waste dish.</li>
+          <li><span class="badge badge-info">Good</span> Score 10.0 - 11.9: Reliable staple meal item.</li>
+          <li><span class="badge badge-warning">Average</span> Score 8.0 - 9.9: Minor recipe or temperature improvements needed.</li>
+          <li><span class="badge badge-danger">Needs Improvement</span> Score &lt; 8.0: High waste or consistently low ratings.</li>
+        </ul>
+      </section>
+
+      <!-- 5. Relational Database Design: Why MySQL? -->
+      <section class="doc-section" id="database">
+        <h2><span>🗄️</span> Relational Database Design: Why MySQL?</h2>
+        <p>
+          <em>"Why MySQL instead of NoSQL or CSV storage?"</em><br>
+          College mess operations require structured relational integrity. A single meal is linked to multiple dishes, which in turn receive hundreds of feedback ratings and wastage incident records over time.
+        </p>
+        <p style="margin-top: 0.75rem;">
+          MySQL provides:
+        </p>
+        <ul style="padding-left: 1.5rem; margin-top: 0.5rem;">
+          <li><strong>Foreign Key Cascades:</strong> Ensuring orphan records are avoided if menus change.</li>
+          <li><strong>High-Performance Aggregations:</strong> <code>COUNT()</code>, <code>AVG()</code>, <code>SUM()</code>, and <code>GROUP BY</code> executed in milliseconds with B-Tree indexes on <code>menu_date</code> and <code>meal_type</code>.</li>
+          <li><strong>ACID Transactions:</strong> Multi-table consistency when recording overall feedback, dish items, wastage, and sentiment simultaneously.</li>
+        </ul>
+      </section>
+
+      <!-- 6. Privacy & Ethics -->
+      <section class="doc-section" id="privacy">
+        <h2><span>🛡️</span> Ethical Data Science & Student Privacy</h2>
+        <p>
+          Students often fear reprisal or hostility from mess contractors if their honest critical feedback is tied to their identity. This project implements <strong>Privacy by Design</strong>:
+        </p>
+        <ul style="padding-left: 1.5rem; margin-top: 0.5rem;">
+          <li>No personal identifying information (PII) such as Name, Roll Number, Phone, or Email is requested or stored.</li>
+          <li>No IP addresses are logged in the database tables.</li>
+          <li>Spam and rapid duplicate submissions are regulated using non-identifying cryptographic session hashes.</li>
+          <li>CSV exports strictly contain aggregated dining evaluation numbers and comments only.</li>
+        </ul>
+      </section>
+
+      <!-- 7. Academic Viva Q&A Guide -->
+      <section class="doc-section" id="viva">
+        <h2><span>🎓</span> 1st-Year B.Tech Viva Q&A Quick Reference</h2>
+        <div style="display:flex; flex-direction:column; gap:1.25rem; margin-top:1rem;">
+          <div style="border-left:3px solid var(--color-primary); padding-left:1rem;">
+            <strong>Q1: What problem does this system solve?</strong>
+            <p style="color:var(--color-text-muted); font-size:0.9rem;">
+              Ans: It provides anonymous feedback collection for students to review meals without fear, while giving mess managers data-backed insights into dish ratings, plate waste root causes, and recipe improvements.
+            </p>
+          </div>
+
+          <div style="border-left:3px solid var(--color-primary); padding-left:1rem;">
+            <strong>Q2: How is food wastage correlated with menu planning?</strong>
+            <p style="color:var(--color-text-muted); font-size:0.9rem;">
+              Ans: The system calculates plate wastage levels ('None', 'Very Little', 'Some', 'A lot') against specific dishes, meal sessions, and portion sizes ('Too Little', 'Appropriate', 'Too Much'). If 80% of waste occurs when portion is marked 'Too Much', standard ladle sizes are adjusted.
+            </p>
+          </div>
+
+          <div style="border-left:3px solid var(--color-primary); padding-left:1rem;">
+            <strong>Q3: How does the sentiment classification work?</strong>
+            <p style="color:var(--color-text-muted); font-size:0.9rem;">
+              Ans: It tokenizes student text comments and matches words against positive and negative dictionaries, computing a polarity score to classify sentiment into Positive, Neutral, or Negative.
+            </p>
+          </div>
+
+          <div style="border-left:3px solid var(--color-primary); padding-left:1rem;">
+            <strong>Q4: What is the future scope?</strong>
+            <p style="color:var(--color-text-muted); font-size:0.9rem;">
+              Ans: Future extensions include computer vision-based plate-waste estimation at tray disposal counters, machine learning forecasting for daily meal turnout, and mobile app push notifications for daily specials.
+            </p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>© 2026 Mess Menu Feedback Analyzer. Academic Project for B.Tech Data Science.</div>
+        <div>Built with PHP 8, MySQL 8, Vanilla JS & Chart.js</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

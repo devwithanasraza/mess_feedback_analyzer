@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Today's Menu | Mess Menu Feedback Analyzer</title>
+  <meta name="description" content="View today's college mess schedule, dishes, dietary tags, and ratings across breakfast, lunch, snacks, and dinner.">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+  <!-- Site Navigation Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">🍽</div>
+        <div class="brand-text">
+          <span class="brand-title">Mess Feedback Analyzer</span>
+          <span class="brand-tag">Campus Dining Intelligence</span>
+        </div>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="menu.html" class="nav-link active">Today's Menu</a></li>
+        <li><a href="feedback.html" class="nav-link">Give Feedback</a></li>
+        <li><a href="about.html" class="nav-link">How It Works & DS</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="feedback.html" class="btn btn-accent btn-sm">Give Feedback</a>
+        <a href="admin/login.html" class="btn btn-outline btn-sm">Admin Portal</a>
+        <button class="mobile-menu-btn" aria-label="Toggle navigation">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main style="padding: 3rem 0 5rem;">
+    <div class="container">
+      
+      <!-- Top Bar: Title & Date Selector -->
+      <div class="menu-header-bar">
+        <div>
+          <h1 style="font-size: 2.25rem; font-weight: 800; color: var(--color-primary-dark); margin-bottom: 0.35rem;">
+            Campus Mess Menu
+          </h1>
+          <p style="color: var(--color-text-muted); font-size: 1rem;">
+            Explore daily meal schedules, dietary information, and peer ratings.
+          </p>
+        </div>
+
+        <div class="date-selector-wrap">
+          <button type="button" class="btn btn-sm btn-outline" id="btn-date-today">Today</button>
+          <input type="date" id="menu-date-input" class="form-control" style="width: auto; padding: 0.5rem 0.85rem;">
+          <select id="available-dates-select" class="form-control" style="width: auto; padding: 0.5rem 0.85rem;" title="Select from available menu dates"></select>
+        </div>
+      </div>
+
+      <!-- Meal Selection Tabs -->
+      <div class="meal-tabs" id="meal-tabs-container">
+        <!-- Rendered dynamically by menu.js: Breakfast, Lunch, Snacks, Dinner -->
+      </div>
+
+      <!-- Dynamic Meal Content & Dish Cards -->
+      <div id="menu-content-area">
+        <!-- Loaded via menu.js from /api/get_menu.php -->
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="brand">
+            <div class="brand-icon">🍽</div>
+            <div class="brand-text">
+              <span class="brand-title">Mess Feedback Analyzer</span>
+            </div>
+          </a>
+          <p>An anonymous student feedback and food-wastage analysis system designed for college dining halls.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Public Portal</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="menu.html">Today's Menu</a></li>
+            <li><a href="feedback.html">Give Feedback</a></li>
+            <li><a href="about.html">How It Works</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Admin & Ops</h4>
+          <ul class="footer-links">
+            <li><a href="admin/login.html">Admin Sign In</a></li>
+            <li><a href="admin/dashboard.html">Admin Dashboard</a></li>
+            <li><a href="admin/menu.html">Menu Management</a></li>
+            <li><a href="admin/wastage.html">Wastage Analytics</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Data Science</h4>
+          <ul class="footer-links">
+            <li><a href="about.html#methodology">Satisfaction Formula</a></li>
+            <li><a href="about.html#privacy">Data Privacy</a></li>
+            <li><a href="about.html#viva">Viva Questions</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2026 Mess Menu Feedback Analyzer. Academic Project for B.Tech Data Science.</div>
+        <div>Built with PHP 8, MySQL 8, Vanilla JS & Chart.js</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/menu.js"></script>
+</body>
+</html>
